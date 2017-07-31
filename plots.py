@@ -121,7 +121,8 @@ def plotPredictedXTarget(target, predicted, lim_l=0, lim_r=550):
 def histEDif(target, pred, nbins=50, lim=25, lim_l=0, lim_r=550):
     '''
     This function plots histogram of the difference between the target energy and the predicted energy (GeV).
-    :param difference: energy difference as numpy.ndarray. Suggestion: use dif() function here.
+    :param target: energy target (true value label) as numpy.ndarray.
+    :param pred: numpy.ndarray of predictions from testing.
     :param nbins: number of bins desired for the histogram, as integer.
     :param lim: (int, float) defines the minimum and maximum values for the x axis.
     :param lim_l: (int, float) defines the minimum energy value, used in the title of the plot.
@@ -162,7 +163,8 @@ def histEDif(target, pred, nbins=50, lim=25, lim_l=0, lim_r=550):
 def histRelDif(target, pred, nbins=50, lim=0.2, lim_l=0, lim_r=550):
     '''
     Plots histogram of the normalized energy difference (%).
-    :param difference: energy difference as numpy.ndarray. Suggestion: use rDif() function here.
+    :param target: energy target (true value label) as numpy.ndarray.
+    :param pred: numpy.ndarray of predictions from testing.
     :param nbins: number of bins desired for the histogram, as integer.
     :param lim: (int, float) defines the minimum and maximum values for the x axis.
     :param lim_l: (int, float) defines the minimum energy value, used in the title of the plot.
@@ -282,120 +284,17 @@ def plotStdXEnergy(target, predicted, lim_y=2.7, lim_l=0, lim_r=520, limit=False
     plt.legend()
     plt.show()
     # plt.savefig("stdXenergy_%d_%d.jpg" % (lim_l, lim_r))
-
-
-def plotMeans():
-    '''
-    Plots the mean of 5 energy bins in GeV.
-    '''
-    mean1 = np.mean(dif(x[0], y[0]))
-    mean2 = np.mean(dif(x[1], y[1]))
-    mean3 = np.mean(dif(x[2], y[2]))
-    mean4 = np.mean(dif(x[3], y[3]))
-    mean5 = np.mean(dif(x[4], y[4]))
-
-    plt.figure(figsize=(5, 5))
-    plt.xlabel("Energy bin")
-    plt.ylabel("Energy difference mean (GeV)")
-    plt.title("Mean")
-
-    plt.scatter(1, mean1, color='green', alpha=0.5, label='0-100 GeV')
-    plt.scatter(2, mean2, color='red', alpha=0.5, label='100-200 GeV')
-    plt.scatter(3, mean3, color='purple', alpha=0.5, label='200-300 GeV')
-    plt.scatter(4, mean4, color='blue', alpha=0.5, label='300-400 GeV')
-    plt.scatter(5, mean5, color='orange', alpha=0.5, label='400-500 GeV')
-
-    plt.legend(loc=2)
-    plt.show()
-    # plt.savefig("means.jpg")
-
-
-def plotStds():
-    '''
-    Plots the standard deviation of 5 energy bins in GeV.
-    '''
-    std1 = np.std(dif(x[0], y[0]))
-    std2 = np.std(dif(x[1], y[1]))
-    std3 = np.mean(dif(x[2], y[2]))
-    std4 = np.std(dif(x[3], y[3]))
-    std5 = np.std(dif(x[4], y[4]))
-
-    plt.figure(figsize=(5, 5))
-    plt.xlabel("Energy bin")
-    plt.ylabel("Energy difference standard deviation (GeV)")
-    plt.title("Standard deviation")
-
-    plt.scatter(1, std1, color='green', alpha=0.5, label='0-100 GeV')
-    plt.scatter(2, std2, color='red', alpha=0.5, label='100-200 GeV')
-    plt.scatter(3, std3, color='purple', alpha=0.5, label='200-300 GeV')
-    plt.scatter(4, std4, color='blue', alpha=0.5, label='300-400 GeV')
-    plt.scatter(5, std5, color='orange', alpha=0.5, label='400-500 GeV')
-
-    plt.ylim(0, 8.5)
-
-    plt.legend(loc=2)
-    plt.show()
-    # plt.savefig("stds.jpg")
-
-
-def plotRMeans():
-    '''
-    Plots the relative mean of 5 energy bins in %.
-    :return:
-    '''
-    mean1 = np.mean(rDif(x[0], y[0]))
-    mean2 = np.mean(rDif(x[1], y[1]))
-    mean3 = np.mean(rDif(x[2], y[2]))
-    mean4 = np.mean(rDif(x[3], y[3]))
-    mean5 = np.mean(rDif(x[4], y[4]))
-
-    plt.figure(figsize=(5, 5))
-    plt.xlabel("Energy bin")
-    plt.ylabel("Relative energy difference mean (%)")
-    plt.title("Mean")
-
-    plt.scatter(1, mean1, color='green', alpha=0.5, label='0-100 GeV')
-    plt.scatter(2, mean2, color='red', alpha=0.5, label='100-200 GeV')
-    plt.scatter(3, mean3, color='purple', alpha=0.5, label='200-300 GeV')
-    plt.scatter(4, mean4, color='blue', alpha=0.5, label='300-400 GeV')
-    plt.scatter(5, mean5, color='orange', alpha=0.5, label='400-500 GeV')
-
-    plt.ylim(-0.003, 0.003)
-
-    plt.legend(loc=2)
-    plt.show()
-    # plt.savefig("means_rDif.jpg")
-
-
-def plotRStds():
-    '''
-    Plots the relative standard deviation of 5 energy bins in %.
-    '''
-    std1 = np.std(rDif(x[0], y[0]))
-    std2 = np.std(rDif(x[1], y[1]))
-    std3 = np.mean(rDif(x[2], y[2]))
-    std4 = np.std(rDif(x[3], y[3]))
-    std5 = np.std(rDif(x[4], y[4]))
-
-    plt.figure(figsize=(5, 5))
-    plt.xlabel("Energy bin")
-    plt.ylabel("Relative energy difference standard deviation (%)")
-    plt.title("Standard deviation")
-
-    plt.scatter(1, std1, color='green', alpha=0.5, label='0-100 GeV')
-    plt.scatter(2, std2, color='red', alpha=0.5, label='100-200 GeV')
-    plt.scatter(3, std3, color='purple', alpha=0.5, label='200-300 GeV')
-    plt.scatter(4, std4, color='blue', alpha=0.5, label='300-400 GeV')
-    plt.scatter(5, std5, color='orange', alpha=0.5, label='400-500 GeV')
-
-    plt.ylim(0, 0.1)
-
-    plt.legend(loc='best')
-    plt.show()
-    # plt.savefig("std_rDif.jpg")
     
     
 def binning(nbins, label, pred):
+    '''
+    Divides the data into n bins containing energy ranges of the same size.
+    :param nbins: number of bins.
+    :param label: energy target (true value label) as numpy.ndarray.
+    :param pred: numpy.ndarray of predictions from testing.
+    :return: array of means, relative means, standard deviations, relative standard deviations, and size of the bins.
+    '''
+
     if __package__ is None:
         sys.path.append(os.path.realpath("/data/shared/Software/CMS_Deep_Learning"))
     
@@ -406,10 +305,10 @@ def binning(nbins, label, pred):
     iSize = 500/nbins
     
     means = []
-    rMeans = []
+    rMeans = [] # normalized means
     stds = []
-    rStds = []
-    sizes = []
+    rStds = [] # normalized standard deviations
+    sizes = [] # number of events in the bins
     
     for i in range(0, nbins):
         sizes.append(len(x[i]))
@@ -436,41 +335,63 @@ def binning(nbins, label, pred):
     return x, y, means, rMeans, stds, rStds, sizes
 
 
-def plotN(means, stds, sizes, what):
+def plotN(input, stds, sizes, what):
+    '''
+    Plots the means or stds (normalized or not) for the bins of energy.
+    :param input: array containing the data to be plotted (means, rMeans, stds or rStds).
+    :param stds: stds array to calculate the error.
+    :param sizes: array containing the number of samples in each bin, to calculate the error.
+    :param what: what is plotted (means, rMeans, stds or rStds), for the legend.
+    '''
     plt.figure(figsize=(5, 5))
     plt.xlabel("Energy bin")
-    
+
+    n=len(input)
+    #print n
+    iSize = 500/n
     
     if what == "means":
+        for i in range(0, n):
+            error = stds[i] / np.sqrt(sizes[i])
+            plt.scatter(i, input[i], color=tuple(np.random.random(3)), alpha=0.5,
+                        label='%d to %d GeV' % (i * iSize, (i + 1) * iSize))
+            plt.errorbar(i, input[i], yerr=error)
+
         plt.ylabel("Mean of the energy difference (GeV)")
         plt.title("Means")
-    
+
+
     elif what == "stds":
+        for i in range(0, n):
+            plt.scatter(i, input[i], color=tuple(np.random.random(3)), alpha=0.5,
+                        label='%d to %d GeV' % (i * iSize, (i + 1) * iSize))
+
         plt.ylabel("Standard deviation of the energy difference (GeV)")
         plt.title("Standard deviations")
-        
+
+
     elif what == "rMeans":
+        for i in range(0, n):
+            error = stds[i] / np.sqrt(sizes[i])
+            plt.scatter(i, input[i], color=tuple(np.random.random(3)), alpha=0.5,
+                        label='%d to %d GeV' % (i * iSize, (i + 1) * iSize))
+            plt.errorbar(i, input[i], yerr=error)
+
         plt.ylabel("Relative mean of the energy difference (GeV)")
         plt.title("Relative means")
     
     elif what == "rStds":
+        for i in range(0, n):
+            plt.scatter(i, input[i], color=tuple(np.random.random(3)), alpha=0.5,
+                        label='%d to %d GeV' % (i * iSize, (i + 1) * iSize))
+
         plt.ylabel("Relative standard deviation of the energy difference (GeV)")
         plt.title("Relative standard deviations")
     
     else:
-        print "The second parameter should be 'means', 'stds', 'rMeans' or 'rStds'. "
-    
-    n=len(means)
-    print n
-    iSize = 500/n
-    
-    for i in range(0, n):
-        error=stds[i]/np.sqrt(sizes[i])
-        #error = stds[i]
-        plt.scatter(i, means[i], color=tuple(np.random.random(3)), alpha=0.5, 
-                    label='%d to %d GeV' % (i*iSize, (i+1)*iSize))
-        plt.errorbar(i, means[i], yerr=error)
-        
+        raise ValueError("The second parameter should be 'means', 'stds', 'rMeans' or 'rStds'. ")
+
+
     plt.xlim(-0.9, 10)
     plt.legend(loc='best', bbox_to_anchor=(1.52, 0.9))
     plt.show()
