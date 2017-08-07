@@ -173,9 +173,9 @@ def histEDif(target, pred, nbins=50, lim=25, lim_l=0, lim_r=550):
     
     plt.show()
     #plt.savefig("histDif_%d_%d.jpg" % (lim_l, lim_r))
-    
 
-def histRelDif(target, pred, nbins=50, lim=0.2, lim_l=0, lim_r=550):
+
+def histRelDif(target, pred, nbins=550, lim=20, lim_l=0, lim_r=550):
     '''
     Plots histogram of the normalized energy difference (%).
     :parameter target: array of energy targets (true value label).
@@ -193,32 +193,32 @@ def histRelDif(target, pred, nbins=50, lim=0.2, lim_l=0, lim_r=550):
     '''
 
     difference = rDif(target, pred)
-    
+
     # the histogram of the data
-    
+
     mean = np.mean(difference)
     print mean
 
     std = np.std(difference)  # standard deviation
     print std
-    
-    #labels=['Mean: %.2f' % mean, 'Standard deviation: %.2f' % std]
-    error=std/np.sqrt(len(target))
+
+    # labels=['Mean: %.2f' % mean, 'Standard deviation: %.2f' % std]
+    error = std / np.sqrt(len(target))
     print error
-    
+
     n, bins, patches = plt.hist(difference, nbins, normed=1, facecolor='green', alpha=0.75)
 
-    plt.text(0.015, 20, 'Mean: %.5f $\pm$ %.5f \nStd. dev.: %.2f' % (mean, error, std))
-    #plt.text(3, 0.12, 'Mean: %.2f $\pm$ %.2f \nStd. dev.: %.2f' % (mean, error, std))
+    plt.text(3, 0.2, 'Mean: %.3f $\pm$ %.3f \nStd. dev.: %.2f' % (mean, error, std))
+    # plt.text(3, 0.12, 'Mean: %.2f $\pm$ %.2f \nStd. dev.: %.2f' % (mean, error, std))
 
 
     plt.xlim(-lim, lim)
-    #plt.xlabel('Relative difference between true and predicted energy (%)')
-    plt.xlabel(r'$\frac{(E_{true} - E_{pred})}{E_{true}}$ (GeV)', size=18)
+    # plt.xlabel('Relative difference between true and predicted energy (%)')
+    plt.xlabel(r'$\frac{(E_{true} - E_{pred})}{E_{true}}$ (%)', size=18)
     plt.ylabel('Probability', size=16)
     plt.title("Relative energy difference \n Energies between %d and %d GeV" % (lim_l, lim_r), size=16)
-    #plt.title("Relative energy difference")
-    
+    # plt.title("Relative energy difference")
+
     plt.legend(loc='best')
     plt.show()
     # plt.savefig("histRDif_%d_%d.jpg" % (lim_l, lim_r))
@@ -391,7 +391,7 @@ def plotN(inp, stds, sizes, what):
     :type what: str
     '''
     plt.figure(figsize=(5, 5))
-    plt.xlabel("Energy", size=18)
+    plt.xlabel("Energy", size=16)
 
     n = len(inp)
     # print n
@@ -407,7 +407,7 @@ def plotN(inp, stds, sizes, what):
             plt.errorbar(x_axis, inp[i], yerr=error, color='black')
 
         plt.ylabel("$\mu_{\Delta E}$ (GeV)", size=19)
-        plt.title("Means", size=18)
+        plt.title("Means", size=16)
 
 
     elif what == "stds":
@@ -418,7 +418,7 @@ def plotN(inp, stds, sizes, what):
                         )
 
         plt.ylabel("$\sigma_{\Delta E}$ (GeV)", size=19)
-        plt.title("Standard deviations", size=18)
+        plt.title("Standard deviations", size=16)
 
 
     elif what == "rMeans":
@@ -431,7 +431,7 @@ def plotN(inp, stds, sizes, what):
             plt.errorbar(energy, inp[i], yerr=error, color='purple')
 
         plt.ylabel(r"$\mu_{\frac{\Delta E}{E}}$ (%)", size=19)
-        plt.title("Relative means", size=18)
+        plt.title("Relative means", size=16)
 
     elif what == "rStds":
         for i in range(0, n):
@@ -441,7 +441,7 @@ def plotN(inp, stds, sizes, what):
                         )
 
         plt.ylabel(r"$\sigma_{\frac{\Delta E}{E}}$ (%)", size=19)
-        plt.title("Relative standard deviations", size=18)
+        plt.title("Relative standard deviations", size=16)
 
     else:
         raise ValueError("'what' should be 'means', 'stds', 'rMeans' or 'rStds'. ")
