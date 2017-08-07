@@ -323,8 +323,8 @@ def plotStdXEnergy(target, predicted, lim_y=2.7, lim_l=0, lim_r=520, limit=False
     plt.legend()
     plt.show()
     # plt.savefig("stdXenergy_%d_%d.jpg" % (lim_l, lim_r))
-    
-    
+
+
 def binning(nbins, label, pred):
     '''
     Divides the data into n bins containing energy ranges of the same size.
@@ -340,41 +340,40 @@ def binning(nbins, label, pred):
 
     if __package__ is None:
         sys.path.append(os.path.realpath("/data/shared/Software/CMS_Deep_Learning"))
-    
+
     from CMS_Deep_Learning.io import gen_from_data, retrieve_data
     from CMS_Deep_Learning.postprocessing.metrics import distribute_to_bins
-    
+
     out, x, y = distribute_to_bins(label, [label, pred], nb_bins=nbins, equalBins=True)
-    iSize = 500/nbins
-    
+    iSize = 500 / nbins
+
     means = []
-    rMeans = [] # normalized means
+    rMeans = []  # normalized means
     stds = []
-    rStds = [] # normalized standard deviations
-    sizes = [] # number of events in the bins
-    
+    rStds = []  # normalized standard deviations
+    sizes = []  # number of events in the bins
+
     for i in range(0, nbins):
         sizes.append(len(x[i]))
-        plotPredictedXTarget(x[i], y[i], i*iSize, (i+1)*iSize)
-        histEDif(x[i], y[i], nbins=200, lim=20, lim_l=i*iSize, lim_r=(i+1)*iSize)
-        histRelDif(x[i], y[i], nbins=150, lim=0.15, lim_l=i*iSize, lim_r=(i+1)*iSize)
-        
+        plotPredictedXTarget(x[i], y[i], i * iSize, (i + 1) * iSize)
+        # histEDif(x[i], y[i], nbins=200, lim=20, lim_l=i*iSize, lim_r=(i+1)*iSize)
+        # histRelDif(x[i], y[i], nbins=150, lim=15, lim_l=i*iSize, lim_r=(i+1)*iSize)
+
         difference = dif(x[i], y[i])
         relDiff = rDif(x[i], y[i])
-        
+
         mean = np.mean(difference)
         means.append(mean)
-        
+
         rMean = np.mean(relDiff)
         rMeans.append(rMean)
-        
+
         std = np.std(difference)
         stds.append(std)
-        
+
         rStd = np.std(relDiff)
         rStds.append(rStd)
-        
-    
+
     return x, y, means, rMeans, stds, rStds, sizes
 
 
