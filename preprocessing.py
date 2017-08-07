@@ -5,6 +5,8 @@ Author: Vitoria Barin Pacela
 e-mail: vitoria.barimpacela@helsinki.fi
 '''
 
+#from CMS_Deep_Learning.io import nb_samples_from_h5
+
 def reshapeData(inp):
     '''
     Function to reshape the data, parameter to Danny's generator
@@ -61,6 +63,8 @@ def genSum(generator=gen_from_data, train_dir, batch_size=500, data_keys=[["ECAL
 
 
 def nSamples(directory):
+    if __package__ is None:
+        sys.path.append(os.path.realpath("/data/shared/Software/CMS_Deep_Learning"))
     from CMS_Deep_Learning.io import nb_samples_from_h5
 
     samples = 0
