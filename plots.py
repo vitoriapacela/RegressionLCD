@@ -378,7 +378,7 @@ def binning(nbins, label, pred):
     return x, y, means, rMeans, stds, rStds, sizes
 
 
-def plotN(input, stds, sizes, what):
+def plotN(inp, stds, sizes, what):
     '''
     Plots the means or stds (normalized or not) for the bins of energy.
     :param input: array containing the data to be plotted (means, rMeans, stds or rStds).
@@ -391,18 +391,20 @@ def plotN(input, stds, sizes, what):
     :type what: str
     '''
     plt.figure(figsize=(5, 5))
-    plt.xlabel("Energy bin", size=18)
+    plt.xlabel("Energy", size=18)
 
-    n = len(input)
+    n = len(inp)
     # print n
     iSize = 500 / n
 
     if what == "means":
         for i in range(0, n):
+            x_axis = (i * iSize + (i + 1) * iSize) / 2
             error = stds[i] / np.sqrt(sizes[i])
-            plt.scatter(i, input[i], color=tuple(np.random.random(3)), alpha=0.5,
-                        label='%d to %d GeV' % (i * iSize, (i + 1) * iSize))
-            plt.errorbar(i, input[i], yerr=error)
+            plt.scatter(x_axis, inp[i], color='purple', alpha=0.5
+                        # , label='%d to %d GeV' % (i * iSize, (i + 1) * iSize)
+                        )
+            plt.errorbar(x_axis, inp[i], yerr=error, color='black')
 
         plt.ylabel("$\mu_{\Delta E}$ (GeV)", size=19)
         plt.title("Means", size=18)
@@ -410,8 +412,10 @@ def plotN(input, stds, sizes, what):
 
     elif what == "stds":
         for i in range(0, n):
-            plt.scatter(i, input[i], color=tuple(np.random.random(3)), alpha=0.5,
-                        label='%d to %d GeV' % (i * iSize, (i + 1) * iSize))
+            energy = (i * iSize + (i + 1) * iSize) / 2
+            plt.scatter(energy, inp[i], color='blue', alpha=0.5
+                        # , label='%d to %d GeV' % (i * iSize, (i + 1) * iSize)
+                        )
 
         plt.ylabel("$\sigma_{\Delta E}$ (GeV)", size=19)
         plt.title("Standard deviations", size=18)
@@ -419,26 +423,30 @@ def plotN(input, stds, sizes, what):
 
     elif what == "rMeans":
         for i in range(0, n):
+            energy = (i * iSize + (i + 1) * iSize) / 2
             error = stds[i] / np.sqrt(sizes[i])
-            plt.scatter(i, input[i], color=tuple(np.random.random(3)), alpha=0.5,
-                        label='%d to %d GeV' % (i * iSize, (i + 1) * iSize))
-            plt.errorbar(i, input[i], yerr=error)
+            plt.scatter(energy, inp[i], color='pink', alpha=0.8
+                        # , label='%d to %d GeV' % (i * iSize, (i + 1) * iSize)
+                        )
+            plt.errorbar(energy, inp[i], yerr=error, color='purple')
 
         plt.ylabel(r"$\mu_{\frac{\Delta E}{E}}$ (%)", size=19)
         plt.title("Relative means", size=18)
 
     elif what == "rStds":
         for i in range(0, n):
-            plt.scatter(i, input[i], color=tuple(np.random.random(3)), alpha=0.5,
-                        label='%d to %d GeV' % (i * iSize, (i + 1) * iSize))
+            energy = (i * iSize + (i + 1) * iSize) / 2
+            plt.scatter(energy, inp[i], color='orange', alpha=0.5
+                        # , label='%d to %d GeV' % (i * iSize, (i + 1) * iSize)
+                        )
 
         plt.ylabel(r"$\sigma_{\frac{\Delta E}{E}}$ (%)", size=19)
         plt.title("Relative standard deviations", size=18)
 
     else:
-        raise ValueError("The second parameter should be 'means', 'stds', 'rMeans' or 'rStds'. ")
+        raise ValueError("'what' should be 'means', 'stds', 'rMeans' or 'rStds'. ")
 
-    plt.xlim(-0.9, 10)
+    plt.xlim(0, 500)
     plt.legend(loc='best', bbox_to_anchor=(1.52, 0.9))
     plt.show()
     # plt.savefig("means.jpg")
