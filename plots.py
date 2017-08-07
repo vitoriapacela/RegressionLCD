@@ -15,7 +15,7 @@ def show_losses(histories):
     '''
     Adapted from Jean-Roch Vlimant's Keras tutorial.
     Plots loss history of the trained model.
-    :param histories: array containing history of losses.
+    :parameter histories: array containing history of losses.
     '''
 
     plt.figure(figsize=(5, 5))
@@ -70,8 +70,10 @@ def show_losses(histories):
 def dif(target, predicted):
     '''
     Returns the difference between the target energy and the predicted energy.
-    :param target: energy target (true value label) as numpy.ndarray.
-    :param predicted: numpy.ndarray of predictions from testing.
+    :parameter target: energy target (true value label) array.
+    :type target: numpy.ndarray
+    :parameter predicted: array of predictions from testing.
+    :type predicted: numpy.ndarray
     :return: energy difference as numpy.ndarray.
     '''
 
@@ -83,8 +85,10 @@ def dif(target, predicted):
 def rDif(target, predicted):
     '''
     Returns the relative difference to the target energy of the particle, in %.
-    :param target: energy target (true value label) as numpy.ndarray.
-    :param predicted: numpy.ndarray of predictions from testing.
+    :parameter target: energy target (true value label) array.
+    :type target: numpy.ndarray
+    :parameter predicted: array of predictions from testing.
+    :type predicted: numpy.ndarray
     :return: relative energy difference as numpy.ndarray.
     '''
 
@@ -98,10 +102,14 @@ def rDif(target, predicted):
 def plotPredictedXTarget(target, predicted, lim_l=0, lim_r=550):
     '''
     Plots the predicted energy against the target energy.
-    :param target: energy target (true value label) as numpy.ndarray.
-    :param predicted: numpy.ndarray of predictions from testing.
-    :param lim_l: (int, float) defines the minimum value for both the x and y axes.
-    :param lim_r: (int, float) defines the maximum value for both the x and y axes.
+    :parameter target: array of energy targets (true value label).
+    :type target: numpy.ndarray
+    :parameter predicted: array of predictions from testing.
+    :type predicted: numpy.ndarray
+    :parameter lim_l: minimum value for both the x and y axes.
+    :type lim_l: float
+    :parameter lim_r: maximum value for both the x and y axes.
+    :type lim_r: float
     '''
 
     plt.figure(figsize=(5, 5))
@@ -122,12 +130,18 @@ def plotPredictedXTarget(target, predicted, lim_l=0, lim_r=550):
 def histEDif(target, pred, nbins=50, lim=25, lim_l=0, lim_r=550):
     '''
     This function plots histogram of the difference between the target energy and the predicted energy (GeV).
-    :param target: energy target (true value label) as numpy.ndarray.
-    :param pred: numpy.ndarray of predictions from testing.
-    :param nbins: number of bins desired for the histogram, as integer.
-    :param lim: (int, float) defines the minimum and maximum values for the x axis.
-    :param lim_l: (int, float) defines the minimum energy value, used in the title of the plot.
-    :param lim_r: (int, float) defines the maximum energy value, used in the title of the plot.
+    :parameter target: array of energy targets (true value label).
+    :type target: numpy.ndarray
+    :parameter pred: array of predictions from testing.
+    :type pred: numpy.ndarray
+    :parameter nbins: number of bins desired for the histogram.
+    :type nbins: int
+    :parameter lim: minimum and maximum values for the x axis.
+    :type lim: float
+    :parameter lim_l: minimum energy value, used in the title of the plot.
+    :type lim_l: float
+    :parameter lim_r: maximum energy value, used in the title of the plot.
+    :type lim_r
     '''
 
     difference = dif(target, pred)
@@ -164,12 +178,18 @@ def histEDif(target, pred, nbins=50, lim=25, lim_l=0, lim_r=550):
 def histRelDif(target, pred, nbins=50, lim=0.2, lim_l=0, lim_r=550):
     '''
     Plots histogram of the normalized energy difference (%).
-    :param target: energy target (true value label) as numpy.ndarray.
-    :param pred: numpy.ndarray of predictions from testing.
-    :param nbins: number of bins desired for the histogram, as integer.
-    :param lim: (int, float) defines the minimum and maximum values for the x axis.
-    :param lim_l: (int, float) defines the minimum energy value, used in the title of the plot.
-    :param lim_r: (int, float) defines the maximum energy value, used in the title of the plot.
+    :parameter target: array of energy targets (true value label).
+    :type target numpy.ndarray
+    :parameter pred: array of predictions from testing.
+    :type pred: numpy.ndarray
+    :parameter nbins: number of bins desired for the histogram.
+    :type nbins: int
+    :parameter lim: minimum and maximum values for the x axis.
+    :type lim: float
+    :parameter lim_l: minimum energy value, used in the title of the plot.
+    :type lim_l: float
+    :parameter lim_r: maximum energy value, used in the title of the plot.
+    :type lim_r: float
     '''
 
     difference = rDif(target, pred)
@@ -207,10 +227,14 @@ def histRelDif(target, pred, nbins=50, lim=0.2, lim_l=0, lim_r=550):
 def plotRelXTarget(target, relative, lim_l=0, lim_r=500):
     '''
     Plots the relative energy difference against the target energy.
-    :param target: energy target (true value label) as numpy.ndarray.
-    :param relative: relative energy difference as numpy.ndarray.
-    :param lim_l: (int, float) defines the minimum value in the x axis.
-    :param lim_r: (int, float) defines the maximum value in the x axis.
+    :parameter target: array of energy targets (true value label).
+    :type target: numpy.ndarray
+    :parameter relative: array of the relative energy differences.
+    :type relative: numpy.ndarray.
+    :parameter lim_l: minimum value in the x axis.
+    :type lim_l: float
+    :parameter lim_r: defines the maximum value in the x axis.
+    :type lim_r: float
     '''
 
     plt.figure(figsize=(5, 5))
@@ -232,12 +256,18 @@ def plotMeanXEnergy(target, predicted, lim_y=0.14, lim_l=0, lim_r=520, limit=Fal
     Plots the prediction error.
     (Mean of the distribution of the difference between the target and the predicted energy,
      divided by the prediction energy, against the target energy).
-    :param target: energy target (true value label) as numpy.ndarray.
-    :param predicted: numpy.ndarray of predictions from testing.
-    :param lim_y: (int, float) defines the maximum value for the y axis.
-    :param lim_l: (int, float) defines the minimum energy value, x axis.
-    :param lim_r: (int, float) defines the maximum energy value, x axis.
-    :param limit: boolean that defines whether or not to limit the axes.
+    :parameter target: array of energy targets (true value label).
+    :type target: numpy.ndarray
+    :parameter predicted: array of predictions from testing.
+    :type predicted: numpy.ndarray
+    :parameter lim_y: maximum value for the y axis.
+    :type lim_y: float
+    :parameter lim_l: minimum energy value, x axis.
+    :type lim_l: float
+    :parameter lim_r: maximum energy value, x axis.
+    :type lim_r: float
+    :parameter limit: whether to limit the axes.
+    :type limit: bool
     '''
 
     plt.figure(figsize=(5, 5))
@@ -260,14 +290,22 @@ def plotMeanXEnergy(target, predicted, lim_y=0.14, lim_l=0, lim_r=520, limit=Fal
 def plotStdXEnergy(target, predicted, lim_y=2.7, lim_l=0, lim_r=520, limit=False):
     '''
     Plots the prediction deviation depending on the true energy.
+
     (Standard deviation of the distribution of the difference between the target and the predicted energy,
     divided by the predicted energy, against the target energy).
-    :param target: energy target (true value label) as numpy.ndarray.
-    :param predicted: numpy.ndarray of predictions from testing.
-    :param lim_y: (int, float) defines the maximum value for the y axis.
-    :param lim_l: (int, float) defines the minimum energy value, x axis.
-    :param lim_r: (int, float) defines the maximum energy value, x axis
-    :param limit: boolean that defines whether or not to limit the axes.
+
+    :parameter target: array of energy targets (true value label).
+    :type target: numpy.ndarray
+    :parameter predicted: array of predictions from testing.
+    :type predicted: numpy.ndarray
+    :parameter lim_y: maximum value for the y axis.
+    :type lim_y: float
+    :parameter lim_l: minimum energy value, x axis.
+    :type lim_l: float
+    :parameter lim_r: maximum energy value, x axis
+    :type lim_r: float
+    :parameter limit: whether or not to limit the axes.
+    :type limit: bool
     '''
 
     plt.figure(figsize=(5, 5))
@@ -290,10 +328,14 @@ def plotStdXEnergy(target, predicted, lim_y=2.7, lim_l=0, lim_r=520, limit=False
 def binning(nbins, label, pred):
     '''
     Divides the data into n bins containing energy ranges of the same size.
-    :param nbins: number of bins.
-    :param label: energy target (true value label) as numpy.ndarray.
-    :param pred: numpy.ndarray of predictions from testing.
-    :return: array of means, relative means, standard deviations, relative standard deviations, and size of the bins.
+    :parameter nbins: number of bins.
+    :type nbins: int
+    :parameter label: array of energy targets (true value label).
+    :type label: numpy.ndarray
+    :parameter pred: array of predictions from testing.
+    :type pred: numpy.ndarray
+    :return: arrays of means, relative means, standard deviations, relative standard deviations, and size of the bins.
+    :rtype: array, array, array, array, array.
     '''
 
     if __package__ is None:
@@ -340,17 +382,21 @@ def plotN(input, stds, sizes, what):
     '''
     Plots the means or stds (normalized or not) for the bins of energy.
     :param input: array containing the data to be plotted (means, rMeans, stds or rStds).
+    :type input: array
     :param stds: stds array to calculate the error.
+    :type stds: array
     :param sizes: array containing the number of samples in each bin, to calculate the error.
+    :type sizes: array
     :param what: what is plotted (means, rMeans, stds or rStds), for the legend.
+    :type what: str
     '''
     plt.figure(figsize=(5, 5))
-    plt.xlabel("Energy bin")
+    plt.xlabel("Energy bin", size=18)
 
-    n=len(input)
-    #print n
-    iSize = 500/n
-    
+    n = len(input)
+    # print n
+    iSize = 500 / n
+
     if what == "means":
         for i in range(0, n):
             error = stds[i] / np.sqrt(sizes[i])
@@ -358,8 +404,8 @@ def plotN(input, stds, sizes, what):
                         label='%d to %d GeV' % (i * iSize, (i + 1) * iSize))
             plt.errorbar(i, input[i], yerr=error)
 
-        plt.ylabel("$\mu_{\Delta E}$ (GeV)")
-        plt.title("Means")
+        plt.ylabel("$\mu_{\Delta E}$ (GeV)", size=19)
+        plt.title("Means", size=18)
 
 
     elif what == "stds":
@@ -367,8 +413,8 @@ def plotN(input, stds, sizes, what):
             plt.scatter(i, input[i], color=tuple(np.random.random(3)), alpha=0.5,
                         label='%d to %d GeV' % (i * iSize, (i + 1) * iSize))
 
-        plt.ylabel("$\sigma_{\Delta E}$ (GeV)")
-        plt.title("Standard deviations")
+        plt.ylabel("$\sigma_{\Delta E}$ (GeV)", size=19)
+        plt.title("Standard deviations", size=18)
 
 
     elif what == "rMeans":
@@ -378,20 +424,19 @@ def plotN(input, stds, sizes, what):
                         label='%d to %d GeV' % (i * iSize, (i + 1) * iSize))
             plt.errorbar(i, input[i], yerr=error)
 
-        plt.ylabel("$\mu_{\frac{\Delta E}{E}}$ (%)")
-        plt.title("Relative means")
-    
+        plt.ylabel(r"$\mu_{\frac{\Delta E}{E}}$ (%)", size=19)
+        plt.title("Relative means", size=18)
+
     elif what == "rStds":
         for i in range(0, n):
             plt.scatter(i, input[i], color=tuple(np.random.random(3)), alpha=0.5,
                         label='%d to %d GeV' % (i * iSize, (i + 1) * iSize))
 
-        plt.ylabel("$\sigma_{\frac{\Delta E}{E}}$ (%)")
-        plt.title("Relative standard deviations")
-    
+        plt.ylabel(r"$\sigma_{\frac{\Delta E}{E}}$ (%)", size=19)
+        plt.title("Relative standard deviations", size=18)
+
     else:
         raise ValueError("The second parameter should be 'means', 'stds', 'rMeans' or 'rStds'. ")
-
 
     plt.xlim(-0.9, 10)
     plt.legend(loc='best', bbox_to_anchor=(1.52, 0.9))

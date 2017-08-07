@@ -41,28 +41,35 @@ def nSum(directory):
 
     return s_ecal, s_hcal
 
-def genSum(generator=gen_from_data, train_dir, batch_size=500, data_keys=[["ECAL", "HCAL"], "target"], prep_func=reshapeData):
-    '''
-    Returns the generator (ECAL and HCAL raw input) and the naive sum of energies in the ECAL and HCAL.
-    :param generator:
-    :param train_dir:
-    :param batch_size:
-    :param data_keys:
-    :param prep_func:
-    :return: ECAL, HCAL, sum_ecal, sum_hcal
-    '''
-    s_ecal = 0
-    s_hcal = 0
-
-    ecal, hcal = generator(train_dir, batch_size, data_keys, prep_func)
-
-    s_ecal = np.sum(ecal)
-    s_hcal = np.sum(hcal)
-
-    return ecal, hcal, s_ecal, s_hcal
+#def genSum(generator=gen_from_data, train_dir, batch_size=500, data_keys=[["ECAL", "HCAL"], "target"], prep_func=reshapeData):
+#    '''
+#    Returns the generator (ECAL and HCAL raw input) and the naive sum of energies in the ECAL and HCAL.
+#    :param generator:
+#    :param train_dir:
+#    :param batch_size:
+#    :param data_keys:
+#    :param prep_func:
+#    :return: ECAL, HCAL, sum_ecal, sum_hcal
+#    '''
+#    s_ecal = 0
+#    s_hcal = 0
+#
+#    ecal, hcal = generator(train_dir, batch_size, data_keys, prep_func)
+#
+#    s_ecal = np.sum(ecal)
+#    s_hcal = np.sum(hcal)
+#
+#    return ecal, hcal, s_ecal, s_hcal
 
 
 def nSamples(directory):
+    '''
+    Return number of samples in the directory.
+    :param directory: path to directory that contains the HDF5 files
+    :type directory: str
+    :return: number of samples
+    :rtype: int
+    '''
     if __package__ is None:
         sys.path.append(os.path.realpath("/data/shared/Software/CMS_Deep_Learning"))
     from CMS_Deep_Learning.io import nb_samples_from_h5

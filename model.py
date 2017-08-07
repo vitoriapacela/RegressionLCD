@@ -14,8 +14,10 @@ def loadModel(name, weights=False):
     '''
     Adapted from Kaustuv Datta and Jayesh Mahapatra's CaloImageMacros.
     Loads models from json file.
-    :param name: (String) name of the json file.
-    :param weights: (boolean) whether or not to load the weights.
+    :parameter name: name of the json file.
+    :type name: str
+    :parameter weights: whether or not to load the weights.
+    :type weights: bool
     :return: loaded model.
     '''
 
@@ -38,8 +40,9 @@ def saveModel(model, name="regression"):
     '''
     Saves model as json file.
     Adapted from Kaustuv Datta and Jayesh Mahapatra's CaloImageMacros.
-    :param model: model to be saved.
-    :param name: (String) name of the model to be saved.
+    :parameter model: model to be saved.
+    :parameter name: name of the model to be saved.
+    :type name: str
     :return: saved model.
     '''
     model_name = name
@@ -54,8 +57,9 @@ def saveLosses(hist, name="regression"):
     '''
     Adapted from Kaustuv Datta and Jayesh Mahapatra's CaloImageMacros.
     Saves model losses into an HDF5 file.
-    :param hist: array of losses in the trained model.
-    :param name: (String) name of the file to be saved
+    :parameter hist: array of losses in the trained model.
+    :parameter name: name of the file to be saved
+    :type name: str
     '''
     loss = np.array(hist.history['loss'])
     vaLoss = np.array(hist.history['val_loss'])
@@ -69,9 +73,11 @@ def saveLosses(hist, name="regression"):
 def defModel(loss='mse', name="regression"):
     '''
     Defines regression model.
-    :param loss: Keras' loss function to be used. Recommended: mse, mean_absolute_error,
+    :parameter loss: Keras' loss function to be used. Recommended: mse, mean_absolute_error,
      mean_squared_logarithmic_error, mean_absolute_percentage_error.
-    :param name: (String) name to save the file as.
+    :type loss: str
+    :parameter name: name to save the file as.
+    :type name: str
     :return: model.
     '''
 
