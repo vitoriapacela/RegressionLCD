@@ -82,15 +82,16 @@ def dif(target, predicted):
 
 def rDif(target, predicted):
     '''
-    Returns the relative difference to the target energy of the particle.
+    Returns the relative difference to the target energy of the particle, in %.
     :param target: energy target (true value label) as numpy.ndarray.
     :param predicted: numpy.ndarray of predictions from testing.
     :return: relative energy difference as numpy.ndarray.
     '''
 
     dif = target - predicted
-    rDif = dif / target
+    rDif = (dif / target)*100
     rDif = rDif.reshape((rDif.shape[0],))
+
     return rDif
 
 
@@ -357,7 +358,7 @@ def plotN(input, stds, sizes, what):
                         label='%d to %d GeV' % (i * iSize, (i + 1) * iSize))
             plt.errorbar(i, input[i], yerr=error)
 
-        plt.ylabel("Mean of the energy difference (GeV)")
+        plt.ylabel("$\mu_{\Delta E}$ (GeV)")
         plt.title("Means")
 
 
@@ -366,7 +367,7 @@ def plotN(input, stds, sizes, what):
             plt.scatter(i, input[i], color=tuple(np.random.random(3)), alpha=0.5,
                         label='%d to %d GeV' % (i * iSize, (i + 1) * iSize))
 
-        plt.ylabel("Standard deviation of the energy difference (GeV)")
+        plt.ylabel("$\sigma_{\Delta E}$ (GeV)")
         plt.title("Standard deviations")
 
 
@@ -377,7 +378,7 @@ def plotN(input, stds, sizes, what):
                         label='%d to %d GeV' % (i * iSize, (i + 1) * iSize))
             plt.errorbar(i, input[i], yerr=error)
 
-        plt.ylabel("Relative mean of the energy difference (GeV)")
+        plt.ylabel("$\mu_{\frac{\Delta E}{E}}$ (%)")
         plt.title("Relative means")
     
     elif what == "rStds":
@@ -385,7 +386,7 @@ def plotN(input, stds, sizes, what):
             plt.scatter(i, input[i], color=tuple(np.random.random(3)), alpha=0.5,
                         label='%d to %d GeV' % (i * iSize, (i + 1) * iSize))
 
-        plt.ylabel("Relative standard deviation of the energy difference (GeV)")
+        plt.ylabel("$\sigma_{\frac{\Delta E}{E}}$ (%)")
         plt.title("Relative standard deviations")
     
     else:
