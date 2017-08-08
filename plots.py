@@ -128,6 +128,39 @@ def plotPredictedXTarget(target, predicted, lim_l=0, lim_r=550, particle=""):
     plt.legend()
     plt.show()
 
+
+def PredictedTarget(target, predicted, lim_l=0, lim_r=550, particle="", nbins=200):
+    '''
+    Plots the predicted energy against the target energy as a 2D histogram.
+    :parameter target: array of energy targets (true value label).
+    :type target: numpy.ndarray
+    :parameter predicted: array of predictions from testing.
+    :type predicted: numpy.ndarray
+    :parameter lim_l: minimum value for both the x and y axes.
+    :type lim_l: float
+    :parameter lim_r: maximum value for both the x and y axes.
+    :type lim_r: float
+    :parameter particle: name of the particle in the dataset, for the title.
+    :type particle: str
+    '''
+    from matplotlib.colors import LogNorm
+
+    plt.figure(figsize=(5, 5))
+    plt.xlabel("Target energy (GeV)")
+    plt.ylabel("Predicted energy (GeV)")
+    plt.title(particle)
+    # plt.title(u"%s Predicted X true energy \n Energies between %d and %d GeV" % (particle, lim_l, lim_r))
+
+    # plt.scatter(target, predicted, color='g', alpha=0.5, cmap=cm)
+    plt.hist2d(target, predicted, bins=nbins, norm=LogNorm(), cmap="cool")
+
+    plt.xlim(lim_l, lim_r)
+    plt.ylim(lim_l, lim_r)
+
+    plt.legend()
+    plt.colorbar()
+    plt.show()
+
     
 def histEDif(target, pred, nbins=1500, lim=25, lim_l=0, lim_r=550, particle=""):
     '''
@@ -246,6 +279,35 @@ def histRelDif(target, pred, nbins=550, lim=20, lim_l=0, lim_r=550, particle="")
     plt.legend(loc='best')
     plt.show()
     # plt.savefig("histRDif_%d_%d.jpg" % (lim_l, lim_r))
+
+
+def RelTarget(target, pred, particle="", nbins=200):
+    '''
+    Plots the relative energy difference against the target energy, as a 2D histogram.
+    :parameter target: array of energy targets (true value label).
+    :type target: numpy.ndarray
+    :parameter pred: array of the energy predictions.
+    :type pred: numpy.ndarray.
+    :parameter particle: name of the particle in the dataset, for the title.
+    :type particle: str
+    '''
+    from matplotlib.colors import LogNorm
+
+    plt.figure(figsize=(5, 5))
+    plt.xlabel("Target energy (GeV)")
+    plt.ylabel("Relative energy difference (%)")
+    plt.title("%s \n Relative energy difference X Target energy" % particle)
+
+    rDifference = rDif(target, pred)
+
+    plt.hist2d(target, rDifference, bins=nbins, norm=LogNorm(), cmap="cool")
+
+    # plt.xlim(lim_l, lim_r)
+    plt.ylim(-100, 100)
+    plt.legend()
+    plt.colorbar()
+    plt.show()
+    # plt.savefig("relXtarget_%d_%d.jpg" % (lim_l, lim_r))
 
 
 def plotRelXTarget(target, relative, lim_l=0, lim_r=500, particle=""):
