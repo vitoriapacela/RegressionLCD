@@ -463,7 +463,7 @@ def plotN(inp, stds, sizes, what, particle=""):
                         )
 
         plt.ylabel("$\sigma_{\Delta E}$ (GeV)", size=19)
-        plt.title("%s Energy resolution" % particle, size=16)
+        plt.title("%s Standard deviations" % particle, size=16)
 
     elif what == "rStds":
         for i in range(0, n):
