@@ -266,7 +266,7 @@ def plotRelXTarget(target, relative, lim_l=0, lim_r=500, particle=""):
     plt.figure(figsize=(5, 5))
     plt.xlabel("Target energy (GeV)")
     plt.ylabel("Relative energy difference (%)")
-    plt.title(u"%s \n Relative energy difference X Target energy" % (particle, lim_l, lim_r))
+    plt.title("%s \n Relative energy difference X Target energy" % particle)
 
     plt.scatter(target, relative, color='g', alpha=0.5)
 
