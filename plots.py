@@ -131,7 +131,7 @@ def plotPredictedXTarget(target, predicted, lim_l=0, lim_r=550, particle=""):
     
 def histEDif(target, pred, nbins=1500, lim=25, lim_l=0, lim_r=550, particle=""):
     '''
-    This function plots histogram of the difference between the target energy and the predicted energy (GeV).
+    Plots histogram of the difference between the target energy and the predicted energy (GeV).
     :parameter target: array of energy targets (true value label).
     :type target: numpy.ndarray
     :parameter pred: array of predictions from testing.
@@ -177,6 +177,24 @@ def histEDif(target, pred, nbins=1500, lim=25, lim_l=0, lim_r=550, particle=""):
     
     plt.show()
     #plt.savefig("histDif_%d_%d.jpg" % (lim_l, lim_r))
+
+
+def resolution(true, pred, particle=""):
+    '''
+    Plots the energy resolution of the calorimeter for the data used.
+    :parameter true: array of energy targets (true value label).
+    :type true: numpy.ndarray
+    :parameter pred: array of predictions from testing.
+    :type pred: numpy.ndarray
+    :parameter particle: name of the particle in the dataset, for the title.
+    :type particle: str
+    '''
+    plt.scatter(true, np.std(dif(true, pred)) / true)
+
+    plt.xlim(0, 500)
+    plt.title("%s Energy resolution" % particle)
+    plt.xlabel("True energy (GeV)")
+    plt.ylabel(r"$\frac{\sigma(\Delta E)}{E_t}$", size=18)
 
 
 def histRelDif(target, pred, nbins=550, lim=20, lim_l=0, lim_r=550, particle=""):
