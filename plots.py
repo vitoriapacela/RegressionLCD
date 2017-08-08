@@ -404,7 +404,6 @@ def binning(nbins, label, pred):
         rStds.append(rStd)
 
         eRes = std / np.mean(x[i])
-        print eRes
         res.append(eRes)
 
 
