@@ -447,6 +447,7 @@ def binning(nbins, label, pred):
     for i in range(0, nbins):
         sizes.append(len(x[i]))
         plotPredictedXTarget(x[i], y[i], i * iSize, (i + 1) * iSize)
+        PredictedTarget(x[i], y[i], i * iSize, (i + 1) * iSize)
         # histEDif(x[i], y[i], nbins=200, lim=20, lim_l=i*iSize, lim_r=(i+1)*iSize)
         # histRelDif(x[i], y[i], nbins=150, lim=15, lim_l=i*iSize, lim_r=(i+1)*iSize)
 
