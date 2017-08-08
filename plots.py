@@ -99,7 +99,7 @@ def rDif(target, predicted):
     return rDif
 
 
-def plotPredictedXTarget(target, predicted, lim_l=0, lim_r=550):
+def plotPredictedXTarget(target, predicted, lim_l=0, lim_r=550, particle=""):
     '''
     Plots the predicted energy against the target energy.
     :parameter target: array of energy targets (true value label).
@@ -110,13 +110,15 @@ def plotPredictedXTarget(target, predicted, lim_l=0, lim_r=550):
     :type lim_l: float
     :parameter lim_r: maximum value for both the x and y axes.
     :type lim_r: float
+    :parameter particle: name of the particle in the dataset, for the title.
+    :type particle: str
     '''
 
     plt.figure(figsize=(5, 5))
     plt.xlabel("Target energy (GeV)")
     plt.ylabel("Predicted energy (GeV)")
-    plt.title("Predicted X true energy \n Energies between %d and %d GeV" % (lim_l, lim_r))
-    #plt.title("Predicted X true energy")
+    plt.title(particle)
+    #plt.title(u"%s – Predicted X true energy \n Energies between %d and %d GeV" % (particle, lim_l, lim_r))
 
     plt.scatter(target, predicted, color='g', alpha=0.5)
 
@@ -127,7 +129,7 @@ def plotPredictedXTarget(target, predicted, lim_l=0, lim_r=550):
     plt.show()
 
     
-def histEDif(target, pred, nbins=50, lim=25, lim_l=0, lim_r=550):
+def histEDif(target, pred, nbins=1500, lim=25, lim_l=0, lim_r=550, particle=""):
     '''
     This function plots histogram of the difference between the target energy and the predicted energy (GeV).
     :parameter target: array of energy targets (true value label).
@@ -142,6 +144,8 @@ def histEDif(target, pred, nbins=50, lim=25, lim_l=0, lim_r=550):
     :type lim_l: float
     :parameter lim_r: maximum energy value, used in the title of the plot.
     :type lim_r
+    :parameter particle: name of the particle in the dataset, for the title.
+    :type particle: str
     '''
 
     difference = dif(target, pred)
@@ -164,8 +168,8 @@ def histEDif(target, pred, nbins=50, lim=25, lim_l=0, lim_r=550):
     #plt.xlabel('Difference between true and predicted energy (GeV)')
     plt.xlabel(r'$E_{true} - E_{pred}$ (GeV)', size=16)
     plt.ylabel('Probability', size=16)
-    plt.title("Energy difference \n Energies between %d and %d GeV" % (lim_l, lim_r), size=16)
-    #plt.title("Energy difference")
+    #plt.title("Energy difference \n Energies between %d and %d GeV" % (lim_l, lim_r), size=16)
+    plt.title(u"%s Energy difference" % particle, size=16)
 
     plt.xlim(-lim, lim)
 
@@ -175,7 +179,7 @@ def histEDif(target, pred, nbins=50, lim=25, lim_l=0, lim_r=550):
     #plt.savefig("histDif_%d_%d.jpg" % (lim_l, lim_r))
 
 
-def histRelDif(target, pred, nbins=550, lim=20, lim_l=0, lim_r=550):
+def histRelDif(target, pred, nbins=550, lim=20, lim_l=0, lim_r=550, particle=""):
     '''
     Plots histogram of the normalized energy difference (%).
     :parameter target: array of energy targets (true value label).
@@ -190,6 +194,8 @@ def histRelDif(target, pred, nbins=550, lim=20, lim_l=0, lim_r=550):
     :type lim_l: float
     :parameter lim_r: maximum energy value, used in the title of the plot.
     :type lim_r: float
+    :parameter particle: name of the particle in the dataset, for the title.
+    :type particle: str
     '''
 
     difference = rDif(target, pred)
@@ -216,15 +222,15 @@ def histRelDif(target, pred, nbins=550, lim=20, lim_l=0, lim_r=550):
     # plt.xlabel('Relative difference between true and predicted energy (%)')
     plt.xlabel(r'$\frac{(E_{true} - E_{pred})}{E_{true}}$ (%)', size=18)
     plt.ylabel('Probability', size=16)
-    plt.title("Relative energy difference \n Energies between %d and %d GeV" % (lim_l, lim_r), size=16)
-    # plt.title("Relative energy difference")
+    #plt.title("Relative energy difference \n Energies between %d and %d GeV" % (lim_l, lim_r), size=16)
+    plt.title("%s Relative energy difference" % particle)
 
     plt.legend(loc='best')
     plt.show()
     # plt.savefig("histRDif_%d_%d.jpg" % (lim_l, lim_r))
 
 
-def plotRelXTarget(target, relative, lim_l=0, lim_r=500):
+def plotRelXTarget(target, relative, lim_l=0, lim_r=500, particle=""):
     '''
     Plots the relative energy difference against the target energy.
     :parameter target: array of energy targets (true value label).
@@ -235,17 +241,19 @@ def plotRelXTarget(target, relative, lim_l=0, lim_r=500):
     :type lim_l: float
     :parameter lim_r: defines the maximum value in the x axis.
     :type lim_r: float
+    :parameter particle: name of the particle in the dataset, for the title.
+    :type particle: str
     '''
 
     plt.figure(figsize=(5, 5))
     plt.xlabel("Target energy (GeV)")
     plt.ylabel("Relative energy difference (%)")
-    #plt.title("Relative energy difference X Target energy")
-    plt.title("Relative energy difference X Target energy \n Energies between %d and %d GeV" % (lim_l, lim_r))
+    plt.title(u"%s \n Relative energy difference X Target energy" % (particle, lim_l, lim_r))
 
     plt.scatter(target, relative, color='g', alpha=0.5)
 
     plt.xlim(lim_l, lim_r)
+    plt.ylim(-100, 100)
     plt.legend()
     plt.show()
     # plt.savefig("relXtarget_%d_%d.jpg" % (lim_l, lim_r))
@@ -334,8 +342,8 @@ def binning(nbins, label, pred):
     :type label: numpy.ndarray
     :parameter pred: array of predictions from testing.
     :type pred: numpy.ndarray
-    :return: arrays of means, relative means, standard deviations, relative standard deviations, and size of the bins.
-    :rtype: array, array, array, array, array.
+    :return: arrays of means, relative means, standard deviations, relative standard deviations, size of the bins, and energy resolution.
+    :rtype: array, array, array, array, array, array.
     '''
 
     if __package__ is None:
@@ -345,6 +353,8 @@ def binning(nbins, label, pred):
     from CMS_Deep_Learning.postprocessing.metrics import distribute_to_bins
 
     out, x, y = distribute_to_bins(label, [label, pred], nb_bins=nbins, equalBins=True)
+    # x -> true
+    # y -> pred
     iSize = 500 / nbins
 
     means = []
@@ -352,6 +362,7 @@ def binning(nbins, label, pred):
     stds = []
     rStds = []  # normalized standard deviations
     sizes = []  # number of events in the bins
+    res= [] # calorimeter energy resolution
 
     for i in range(0, nbins):
         sizes.append(len(x[i]))
@@ -374,10 +385,15 @@ def binning(nbins, label, pred):
         rStd = np.std(relDiff)
         rStds.append(rStd)
 
-    return x, y, means, rMeans, stds, rStds, sizes
+        eRes = std / np.mean(x[i])
+        print eRes
+        res.append(eRes)
 
 
-def plotN(inp, stds, sizes, what):
+    return x, y, means, rMeans, stds, rStds, sizes, res
+
+
+def plotN(inp, stds, sizes, what, particle=""):
     '''
     Plots the means or stds (normalized or not) for the bins of energy.
     :param input: array containing the data to be plotted (means, rMeans, stds or rStds).
@@ -388,6 +404,8 @@ def plotN(inp, stds, sizes, what):
     :type sizes: array
     :param what: what is plotted (means, rMeans, stds or rStds), for the legend.
     :type what: str
+    :parameter particle: name of the particle in the dataset, for the title.
+    :type particle: str
     '''
     plt.figure(figsize=(5, 5))
     plt.xlabel("Energy", size=16)
@@ -406,19 +424,7 @@ def plotN(inp, stds, sizes, what):
             plt.errorbar(x_axis, inp[i], yerr=error, color='black')
 
         plt.ylabel("$\mu_{\Delta E}$ (GeV)", size=19)
-        plt.title("Means", size=16)
-
-
-    elif what == "stds":
-        for i in range(0, n):
-            energy = (i * iSize + (i + 1) * iSize) / 2
-            plt.scatter(energy, inp[i], color='blue', alpha=0.5
-                        # , label='%d to %d GeV' % (i * iSize, (i + 1) * iSize)
-                        )
-
-        plt.ylabel("$\sigma_{\Delta E}$ (GeV)", size=19)
-        plt.title("Standard deviations", size=16)
-
+        plt.title("%s Means" % particle, size=16)
 
     elif what == "rMeans":
         for i in range(0, n):
@@ -430,7 +436,17 @@ def plotN(inp, stds, sizes, what):
             plt.errorbar(energy, inp[i], yerr=error, color='purple')
 
         plt.ylabel(r"$\mu_{\frac{\Delta E}{E}}$ (%)", size=19)
-        plt.title("Relative means", size=16)
+        plt.title("%s Relative means" % particle, size=16)
+
+    elif what == "stds":
+        for i in range(0, n):
+            energy = (i * iSize + (i + 1) * iSize) / 2
+            plt.scatter(energy, inp[i], color='blue', alpha=0.5
+                        # , label='%d to %d GeV' % (i * iSize, (i + 1) * iSize)
+                        )
+
+        plt.ylabel("$\sigma_{\Delta E}$ (GeV)", size=19)
+        plt.title("%s Energy resolution" % particle, size=16)
 
     elif what == "rStds":
         for i in range(0, n):
@@ -440,10 +456,20 @@ def plotN(inp, stds, sizes, what):
                         )
 
         plt.ylabel(r"$\sigma_{\frac{\Delta E}{E}}$ (%)", size=19)
-        plt.title("Relative standard deviations", size=16)
+        plt.title("%s Relative standard deviations" % particle, size=16)
+
+    elif what == "res":
+        for i in range(0, n):
+            energy = (i * iSize + (i + 1) * iSize) / 2
+            plt.scatter(energy, inp[i], color='blue', alpha=0.5
+                        # , label='%d to %d GeV' % (i * iSize, (i + 1) * iSize)
+                        )
+
+        plt.ylabel(r"$\frac{\sigma({\Delta E})}{E_{mean}}$ (GeV)", size=19)
+        plt.title("%s Energy resolution" % particle, size=16)
 
     else:
-        raise ValueError("'what' should be 'means', 'stds', 'rMeans' or 'rStds'. ")
+        raise ValueError("'what' should be 'means', 'stds', 'rMeans', 'rStds', or 'res'. ")
 
     plt.xlim(0, 500)
     plt.legend(loc='best', bbox_to_anchor=(1.52, 0.9))
