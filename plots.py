@@ -118,7 +118,7 @@ def plotPredictedXTarget(target, predicted, lim_l=0, lim_r=550, particle=""):
     plt.xlabel("Target energy (GeV)")
     plt.ylabel("Predicted energy (GeV)")
     plt.title(particle)
-    #plt.title(u"%s – Predicted X true energy \n Energies between %d and %d GeV" % (particle, lim_l, lim_r))
+    #plt.title(u"%s Predicted X true energy \n Energies between %d and %d GeV" % (particle, lim_l, lim_r))
 
     plt.scatter(target, predicted, color='g', alpha=0.5)
 
