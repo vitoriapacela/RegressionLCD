@@ -5,7 +5,7 @@ Author: Vitoria Barin Pacela
 e-mail: vitoria.barimpacela@helsinki.fi
 '''
 
-#from CMS_Deep_Learning.io import nb_samples_from_h5
+import sys
 
 def reshapeData(inp):
     '''
@@ -41,25 +41,35 @@ def nSum(directory):
 
     return s_ecal, s_hcal
 
-#def genSum(generator=gen_from_data, train_dir, batch_size=500, data_keys=[["ECAL", "HCAL"], "target"], prep_func=reshapeData):
-#    '''
-#    Returns the generator (ECAL and HCAL raw input) and the naive sum of energies in the ECAL and HCAL.
-#    :param generator:
-#    :param train_dir:
-#    :param batch_size:
-#    :param data_keys:
-#    :param prep_func:
-#    :return: ECAL, HCAL, sum_ecal, sum_hcal
-#    '''
-#    s_ecal = 0
-#    s_hcal = 0
-#
-#    ecal, hcal = generator(train_dir, batch_size, data_keys, prep_func)
-#
-#    s_ecal = np.sum(ecal)
-#    s_hcal = np.sum(hcal)
-#
-#    return ecal, hcal, s_ecal, s_hcal
+def genSum(generator):
+    ecal, hcal, true = next(generator)
+    s_ecal += np.sum(ecal)
+    s_hcal += np.sum(hcal)
+    yield ecal, hcal, s_ecal, s_hcal
+
+def genSum(generator=gen_from_data, train_dir, batch_size=500, data_keys=[["ECAL", "HCAL"], "target"], prep_func=reshapeData):
+   '''
+   Returns the generator (ECAL and HCAL raw input) and the naive sum of energies in the ECAL and HCAL.
+   :param generator: generator of data.
+   :param train_dir: path to directory where the HDF5 files are.
+   :type train_dir: str
+   :param batch_size: The number of samples to grab at each call to next().
+   :type batch_size: int
+   :param data_keys: The keys to draw from in the HDF5 files (order matters).
+   :type data_keys: list of str
+   :param prep_func: a function that takes in the tuple of outputs and returns some light transformation on them,
+   for example reshaping or padding.
+   :return: ECAL, HCAL, sum_ecal, sum_hcal
+   '''
+   s_ecal = 0
+   s_hcal = 0
+
+   ecal, hcal = generator(train_dir, batch_size, data_keys, prep_func)
+
+   s_ecal = np.sum(ecal)
+   s_hcal = np.sum(hcal)
+
+   return ecal, hcal, s_ecal, s_hcal
 
 
 def nSamples(directory):
@@ -70,6 +80,7 @@ def nSamples(directory):
     :return: number of samples
     :rtype: int
     '''
+    import sys
     if __package__ is None:
         sys.path.append(os.path.realpath("/data/shared/Software/CMS_Deep_Learning"))
     from CMS_Deep_Learning.io import nb_samples_from_h5
