@@ -4,8 +4,11 @@ Repository for my SURF Caltech-CMS project on deep learning for imaging calorime
 
 This repository has data pre-processing functions, model topologies and post-processing functions to analyze the results.
 
-Pre-processing dependencies: Danny Weitecamp's CMS_Deep_Learning package (https://github.com/DannyWeitekamp/CMS_Deep_Learning) for the data generator.
+Pre-processing dependencies:
+Danny Weitecamp's [CMS_Deep_Learning package](https://github.com/DannyWeitekamp/CMS_Deep_Learning) for the data generator.
 
-Machine Learning dependencies: Keras with Tensorflow in the backend.
+Machine Learning dependencies:
+[Keras](https://keras.io/) with [Tensorflow](https://www.tensorflow.org/) in the backend.
 
-Post-processing dependencies: Matplotlib, Scipy.
+Post-processing dependencies:
+[Matplotlib](http://matplotlib.org/), [Scipy](https://www.scipy.org/).
