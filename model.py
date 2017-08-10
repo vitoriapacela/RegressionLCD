@@ -72,7 +72,7 @@ def saveLosses(hist, name="regression"):
 
 def defModel(loss='mse', name="regression"):
     '''
-    Defines regression model.
+    Regression model that has ECAL and HCAL as inputs.
     :parameter loss: Keras' loss function to be used. Recommended: mse, mean_absolute_error,
      mean_squared_logarithmic_error, mean_absolute_percentage_error.
     :type loss: str
@@ -116,4 +116,94 @@ def defModel(loss='mse', name="regression"):
     model.compile(loss=loss, optimizer='adam')
     model.summary()
     saveModel(model, name=name)
+    return model
+
+
+def modelSum(loss='mse', name="regression"):
+    '''
+    Regression model that has as inputs ECAL, HCAL and a numpy array containing the sum over ECAL and HCAL.
+    :param loss: Keras' loss function to be used. Recommended: mse, mean_absolute_error,
+     mean_squared_logarithmic_error, mean_absolute_percentage_error.
+    :param name: (String) name to save the file as.
+    :return: model.
+    '''
+    # ECAL input
+    input1 = Input(shape=(25, 25, 25))
+    r = Reshape((25, 25, 25, 1))(input1)
+    model1 = Convolution3D(3, 4, 4, 4, activation='relu')(r)
+    model1 = MaxPooling3D()(model1)
+    model1 = Flatten()(model1)
+
+    # HCAL input
+    input2 = Input(shape=(5, 5, 60))
+    r = Reshape((5, 5, 60, 1))(input2)
+    model2 = Convolution3D(10, 2, 2, 2, activation='relu')(r)
+    model2 = MaxPooling3D()(model2)
+    model2 = Flatten()(model2)
+
+    # HCAL sum
+    model3 = Input(shape=(1,))
+    # r = Reshape((1, 1))(input3)
+    # model3 = Flatten()(r)
+
+    # join the three input models
+    bmodel = merge([model1, model2, model3], mode='concat')
+
+    # fully connected ending
+    bmodel = (Dense(1000, activation='relu'))(bmodel)
+    bmodel = (Dropout(0.5))(bmodel)
+
+    oe = Dense(1, activation='linear', name='energy')(bmodel)  # output energy regression
+
+    # energy regression model
+    model = Model(input=[input1, input2, input3], output=oe)
+    model.compile(loss=loss, optimizer='adam')
+    model.summary()
+    saveModel(model, name=name)
+
+    return model
+
+
+def modelHCALSum(loss='mse', name="regression"):
+    '''
+    Regression model that has as inputs ECAL, HCAL and the sum over HCAL.
+    :param loss: Keras' loss function to be used. Recommended: mse, mean_absolute_error,
+     mean_squared_logarithmic_error, mean_absolute_percentage_error.
+    :param name: (String) name to save the file as.
+    :return: model.
+    '''
+    # ECAL input
+    input1 = Input(shape=(25, 25, 25))
+    r = Reshape((25, 25, 25, 1))(input1)
+    model1 = Convolution3D(3, 4, 4, 4, activation='relu')(r)
+    model1 = MaxPooling3D()(model1)
+    model1 = Flatten()(model1)
+
+    # HCAL input
+    input2 = Input(shape=(5, 5, 60))
+    r = Reshape((5, 5, 60, 1))(input2)
+    model2 = Convolution3D(10, 2, 2, 2, activation='relu')(r)
+    model2 = MaxPooling3D()(model2)
+    model2 = Flatten()(model2)
+
+    # HCAL sum
+    model3 = Input(shape=(1,))
+    # r = Reshape((1, 1))(input3)
+    # model3 = Flatten()(r)
+
+    # join the three input models
+    bmodel = merge([model1, model2, model3], mode='concat')
+
+    # fully connected ending
+    bmodel = (Dense(1000, activation='relu'))(bmodel)
+    bmodel = (Dropout(0.5))(bmodel)
+
+    oe = Dense(1, activation='linear', name='energy')(bmodel)  # output energy regression
+
+    # energy regression model
+    model = Model(input=[input1, input2, input3], output=oe)
+    model.compile(loss=loss, optimizer='adam')
+    model.summary()
+    saveModel(model, name=name)
+
     return model
