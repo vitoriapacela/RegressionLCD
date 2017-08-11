@@ -5,8 +5,6 @@ Author: Vitoria Barin Pacela
 e-mail: vitoria.barimpacela@helsinki.fi
 '''
 
-import sys
-
 def reshapeData(inp):
     '''
     Function to reshape the data, parameter to Danny's generator
@@ -26,6 +24,7 @@ def nSum(directory):
     :return: sum of the energies in the ECAL and HCAL, respectively.
     '''
     import os
+    import glob
 
     s_ecal = 0
     s_hcal = 0
