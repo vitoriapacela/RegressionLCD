@@ -5,6 +5,7 @@ Author: Vitoria Barin Pacela
 e-mail: vitoria.barimpacela@helsinki.fi
 '''
 import os, sys, glob, h5py
+import numpy as np
 
 def reshapeData(inp):
     '''
