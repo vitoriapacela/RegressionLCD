@@ -51,6 +51,7 @@ def nSamples(directory):
     :rtype: int
     '''
     import sys
+    import os
     if __package__ is None:
         sys.path.append(os.path.realpath("/data/shared/Software/CMS_Deep_Learning"))
     from CMS_Deep_Learning.io import nb_samples_from_h5
@@ -60,6 +61,7 @@ def nSamples(directory):
         samples += nb_samples_from_h5(directory+f)
 
     return samples
+
 
 def genHsum(generator):
     '''
