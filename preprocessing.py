@@ -4,6 +4,7 @@ Contains custom utilities for preprocessing raw data.
 Author: Vitoria Barin Pacela
 e-mail: vitoria.barimpacela@helsinki.fi
 '''
+import os, sys, glob, h5py
 
 def reshapeData(inp):
     '''
@@ -23,8 +24,7 @@ def nSum(directory):
     :param directory: path to the directory with HDF5 files.
     :return: sum of the energies in the ECAL and HCAL, respectively.
     '''
-    import os
-    import glob
+
 
     s_ecal = 0
     s_hcal = 0
