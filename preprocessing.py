@@ -21,10 +21,12 @@ def reshapeData(inp):
 
 def nSum(directory):
     '''
-    Naive sum of the shower deposits in the HCAL and ECAL.
+    Naive sum of the shower deposits in the ECAL and HCAL.
     :param directory: path to the directory with HDF5 files.
     :return: sum of the energies in the ECAL and HCAL, respectively.
     '''
+    import os
+
     s_ecal = 0
     s_hcal = 0
 
