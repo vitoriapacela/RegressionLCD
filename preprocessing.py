@@ -152,6 +152,7 @@ def preSum(train_dir):
     all_y = simple_grab('Y', data=train_dir, label_keys='target',
                         input_keys=['ECAL', 'HCAL'])
     all_y = all_y[:, 1:]
+    all_y = all_y.ravel()
     print(all_y.shape)
 
     # sum of ECAL and HCAL

@@ -7,9 +7,10 @@ e-mail: vitoria.barimpacela@helsinki.fi
 
 import matplotlib.pyplot as plt
 import numpy as np
-import matplotlib.mlab as mlab
-from scipy.stats import norm
+#import matplotlib.mlab as mlab
+#from scipy.stats import norm
 import os, sys
+from matplotlib.colors import LogNorm
 
 def show_losses(histories):
     '''
@@ -143,7 +144,7 @@ def PredictedTarget(target, predicted, lim_l=0, lim_r=550, particle="", nbins=20
     :parameter particle: name of the particle in the dataset, for the title.
     :type particle: str
     '''
-    from matplotlib.colors import LogNorm
+
 
     plt.figure(figsize=(5, 5))
     plt.xlabel("Target energy (GeV)")
@@ -291,7 +292,6 @@ def RelTarget(target, pred, particle="", nbins=200):
     :parameter particle: name of the particle in the dataset, for the title.
     :type particle: str
     '''
-    from matplotlib.colors import LogNorm
 
     plt.figure(figsize=(5, 5))
     plt.xlabel("Target energy (GeV)")
@@ -557,7 +557,7 @@ def plotN(inp, stds, sizes, what, particle=""):
     # plt.savefig("means.jpg")
 
 
-def SumTarget(target, inSum):
+def plotSumXTarget(target, inSum):
     '''
     Plots the sum of energies against the true energy.
     :type target: numpy.ndarray.
@@ -577,4 +577,27 @@ def SumTarget(target, inSum):
     #plt.ylim(0, 500)
 
     plt.legend()
+    plt.show()
+
+
+def SumTarget(target, inSum):
+    '''
+    Plots the sum of energies against the true energy as a 2D histogram.
+    :type target: numpy.ndarray.
+    :param target: array of true energy values.
+    :type inSum: numpy.ndarray.
+    :param inSum: array of the input energy sums.
+    '''
+    plt.figure(figsize=(5, 5))
+    plt.xlabel("Target energy (GeV)")
+    plt.ylabel("Summed energy (GeV)")
+    plt.title("Sum X True energy")
+
+    plt.hist2d(target, inSum, bins=200, norm=LogNorm(), cmap="cool")
+
+    plt.xlim(0, 500)
+    #plt.ylim(0, 500)
+
+    plt.legend()
+    plt.colorbar()
     plt.show()
