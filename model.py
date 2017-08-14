@@ -141,13 +141,14 @@ def modelSum(loss='mse', name="regression"):
     model2 = MaxPooling3D()(model2)
     model2 = Flatten()(model2)
 
+    # ECAL sum
+    input3 = Input(shape=(1,))
+
     # HCAL sum
-    model3 = Input(shape=(1,))
-    # r = Reshape((1, 1))(input3)
-    # model3 = Flatten()(r)
+    input4 = Input(shape=(1,))
 
     # join the three input models
-    bmodel = merge([model1, model2, model3], mode='concat')
+    bmodel = merge([model1, model2, input3, input4], mode='concat')
 
     # fully connected ending
     bmodel = (Dense(1000, activation='relu'))(bmodel)
@@ -156,7 +157,7 @@ def modelSum(loss='mse', name="regression"):
     oe = Dense(1, activation='linear', name='energy')(bmodel)  # output energy regression
 
     # energy regression model
-    model = Model(input=[input1, input2, input3], output=oe)
+    model = Model(input=[input1, input2, input3, input4], output=oe)
     model.compile(loss=loss, optimizer='adam')
     model.summary()
     saveModel(model, name=name)

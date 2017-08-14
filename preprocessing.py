@@ -21,6 +21,7 @@ def reshapeData(inp):
 
 def nSum(directory):
     '''
+    Does not work. Check out new function.
     Naive sum of the shower deposits in the ECAL and HCAL.
     :param directory: path to the directory with HDF5 files.
     :return: sum of the energies in the ECAL and HCAL, respectively.
@@ -38,8 +39,8 @@ def nSum(directory):
         ecal = np.array(inp["ECAL"], dtype="float32")
         hcal = np.array(inp["HCAL"], dtype="float32")
 
-        s_ecal += np.sum(ecal)
-        s_hcal += np.sum(hcal)
+        s_ecal += np.sum(np.sum(np.sum(ecal, axis=-1), axis=-1), axis=-1, keepdims=True)
+        s_hcal += np.sum(np.sum(np.sum(hcal, axis=-1), axis=-1), axis=-1, keepdims=True)
 
     return s_ecal, s_hcal
 
@@ -100,3 +101,61 @@ def _genSum(generator):
         # print reshaped.shape
         # print reshaped
         yield [ecal, hcal, sums], true
+
+
+def sumCal(cal):
+    '''
+    Sum of the energy deposits over the calorimeter.
+    :type cal: numpy.ndarray, 4D.
+    :param cal: ECAL or HCAL input.
+    :return: sum of the energy values
+    :rtype: numpy.ndarray, 2D.
+    '''
+    s_cal = np.sum(np.sum(np.sum(cal, axis=-1), axis=-1), axis=-1, keepdims=True)
+    return s_cal
+
+
+def inpSum(dir):
+    '''
+    Naive sum of the shower deposits in the ECAL and HCAL.
+    :type dir: str.
+    :param dir: path to the directory with HDF5 files.
+    :return: sum of the ECAL and HCAL sums.
+    :rtype: numpy.ndarray, shape: (n,)
+    '''
+    # grab ECAL and HCAL inputs
+    ecal, hcal = simple_grab('X', data=dir, label_keys=['ECAL', 'HCAL'], input_keys=['ECAL', 'HCAL'])
+
+    # sums
+    s_ecal = sumCal(ecal)
+    s_hcal = sumCal(hcal)
+
+    # reshape sum output
+    s_ecal = s_ecal.ravel()
+    s_hcal = s_hcal.ravel()
+
+    # total sum
+    inSum = s_ecal + s_hcal
+    return inSum
+
+
+def preSum(train_dir):
+    '''
+    To be used before training for data visualization.
+    Naive sum of the shower deposits in the ECAL and HCAL.
+    :type train_dir: str.
+    :param train_dir: path to the training directory with HDF5 files.
+    :return: energy targets and energy sum arrays.
+    :rtype: numpy.ndarray, numpy.ndarray; shape: (n,) shape: (n,)
+    '''
+    # grab targets (y)
+    all_y = simple_grab('Y', data=train_dir, label_keys='target',
+                        input_keys=['ECAL', 'HCAL'])
+    all_y = all_y[:, 1:]
+    print(all_y.shape)
+
+    # sum of ECAL and HCAL
+    inSum = inpSum(train_dir)
+
+    return all_y, inSum
+

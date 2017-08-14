@@ -555,3 +555,26 @@ def plotN(inp, stds, sizes, what, particle=""):
     plt.legend(loc='best', bbox_to_anchor=(1.52, 0.9))
     plt.show()
     # plt.savefig("means.jpg")
+
+
+def SumTarget(target, inSum):
+    '''
+    Plots the sum of energies against the true energy.
+    :type target: numpy.ndarray.
+    :param target: array of true energy values.
+    :type inSum: numpy.ndarray.
+    :param inSum: array of the input energy sums.
+    '''
+
+    plt.figure(figsize=(5, 5))
+    plt.xlabel("Target energy (GeV)")
+    plt.ylabel("Summed energy (GeV)")
+    plt.title("Sum X True energy")
+
+    plt.scatter(target, inSum, color='g', alpha=0.5)
+
+    plt.xlim(0, 500)
+    #plt.ylim(0, 500)
+
+    plt.legend()
+    plt.show()
