@@ -6,6 +6,9 @@ e-mail: vitoria.barimpacela@helsinki.fi
 '''
 import os, sys, glob, h5py
 import numpy as np
+
+if __package__ is None:
+    sys.path.append(os.path.realpath("/data/shared/Software/CMS_Deep_Learning"))
 from CMS_Deep_Learning.io import simple_grab
 
 def reshapeData(inp):
