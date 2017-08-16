@@ -162,7 +162,7 @@ def PredictedTarget(target, predicted, lim_l=0, lim_r=550, particle="", nbins=20
     plt.colorbar()
     plt.show()
 
-    
+
 def histEDif(target, pred, nbins=1500, lim=25, lim_l=0, lim_r=550, particle=""):
     '''
     Plots histogram of the difference between the target energy and the predicted energy (GeV).
@@ -181,36 +181,39 @@ def histEDif(target, pred, nbins=1500, lim=25, lim_l=0, lim_r=550, particle=""):
     :parameter particle: name of the particle in the dataset, for the title.
     :type particle: str
     '''
-
     difference = dif(target, pred)
-    
+
     # the histogram of the data
-    
+
     mean = np.mean(difference)
-    print mean
+    # print mean
 
     std = np.std(difference)  # standard deviation
-    print std
-    
-    error=std/np.sqrt(len(target))
-    #labels=['Mean: %.2f' % mean, 'Standard deviation: %.2f' % std]
-    
-    n, bins, patches = plt.hist(difference, nbins, normed=1, facecolor='green', alpha=0.75)
-    
-    plt.text(3, 0.12, 'Mean: %.2f $\pm$ %.2f \nStd. dev.: %.2f' % (mean, error, std))
+    # print std
 
-    #plt.xlabel('Difference between true and predicted energy (GeV)')
+    error = std / np.sqrt(len(target))
+    # labels=['Mean: %.2f' % mean, 'Standard deviation: %.2f' % std]
+
+    n, bins, patches = plt.hist(difference, nbins, normed=1, facecolor='green', alpha=0.75)
+
+    # plt.text(10, 0.025, 'Mean: %.2f $\pm$ %.2f \nStd. dev.: %.2f' % (mean, error, std))
+
+    # plt.xlabel('Difference between true and predicted energy (GeV)')
     plt.xlabel(r'$E_{true} - E_{pred}$ (GeV)', size=16)
     plt.ylabel('Probability', size=16)
-    #plt.title("Energy difference \n Energies between %d and %d GeV" % (lim_l, lim_r), size=16)
+    # plt.title("Energy difference \n Energies between %d and %d GeV" % (lim_l, lim_r), size=16)
     plt.title(u"%s Energy difference" % particle, size=16)
 
     plt.xlim(-lim, lim)
 
-    plt.legend(loc='best')
-    
+    # text has to be defined after setting the limits
+    plt.text(0.3 * max(plt.xlim()), 0.6 * max(plt.ylim()),
+             'Mean: %.2f $\pm$ %.2f \nStd. dev.: %.2f' % (mean, error, std))
+    # print max(plt.xlim())
+    # print type(max(plt.xlim()))
+    # plt.axis('tight')
     plt.show()
-    #plt.savefig("histDif_%d_%d.jpg" % (lim_l, lim_r))
+    # plt.savefig("histDif_%d_%d.jpg" % (lim_l, lim_r))
 
 
 def resolution(true, pred, particle=""):
@@ -249,35 +252,27 @@ def histRelDif(target, pred, nbins=550, lim=20, lim_l=0, lim_r=550, particle="")
     :parameter particle: name of the particle in the dataset, for the title.
     :type particle: str
     '''
-
     difference = rDif(target, pred)
 
     # the histogram of the data
 
     mean = np.mean(difference)
-    print mean
-
+    # print mean
     std = np.std(difference)  # standard deviation
-    print std
-
-    # labels=['Mean: %.2f' % mean, 'Standard deviation: %.2f' % std]
+    # print std
     error = std / np.sqrt(len(target))
-    print error
+    # print error
 
     n, bins, patches = plt.hist(difference, nbins, normed=1, facecolor='green', alpha=0.75)
 
-    plt.text(3, 0.2, 'Mean: %.3f $\pm$ %.3f \nStd. dev.: %.2f' % (mean, error, std))
-    # plt.text(3, 0.12, 'Mean: %.2f $\pm$ %.2f \nStd. dev.: %.2f' % (mean, error, std))
-
-
     plt.xlim(-lim, lim)
-    # plt.xlabel('Relative difference between true and predicted energy (%)')
+    plt.text(0.3 * max(plt.xlim()), 0.6 * max(plt.ylim()),
+             'Mean: %.3f $\pm$ %.3f \nStd. dev.: %.2f' % (mean, error, std))
+
     plt.xlabel(r'$\frac{(E_{true} - E_{pred})}{E_{true}}$ (%)', size=18)
     plt.ylabel('Probability', size=16)
-    #plt.title("Relative energy difference \n Energies between %d and %d GeV" % (lim_l, lim_r), size=16)
     plt.title("%s Relative energy difference" % particle)
 
-    plt.legend(loc='best')
     plt.show()
     # plt.savefig("histRDif_%d_%d.jpg" % (lim_l, lim_r))
 
@@ -304,8 +299,8 @@ def RelTarget(target, pred, particle="", nbins=200):
 
     # plt.xlim(lim_l, lim_r)
     plt.ylim(-100, 100)
-    plt.legend()
     plt.colorbar()
+    plt.axis('tight')
     plt.show()
     # plt.savefig("relXtarget_%d_%d.jpg" % (lim_l, lim_r))
 
