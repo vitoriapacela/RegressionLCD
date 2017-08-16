@@ -226,12 +226,38 @@ def resolution(true, pred, particle=""):
     :parameter particle: name of the particle in the dataset, for the title.
     :type particle: str
     '''
-    plt.scatter(true, np.std(dif(true, pred)) / true)
+    plt.rcParams['agg.path.chunksize'] = 10000
+    from scipy.optimize import curve_fit
+
+    res = np.std(dif(true, pred)) / true
+
+    # energy resolution of the calorimeter
+    def func(res, a, b, c):
+        # equation to be fit in the data
+        return a / np.sqrt(res) + b + c / res
+
+    popt, pcov = curve_fit(func, true, res)
+    print popt
+    print pcov
+
+    # sorting the data so that it can be plot
+    import itertools
+    y = func(true, *popt)
+    lists = sorted(itertools.izip(*[true, y]))
+    new_x, new_y = list(itertools.izip(*lists))
+
+    fit = r'$\frac{\sigma(\Delta E)}{E_{t}} = \frac{%.2e}{\sqrt{E_{t}}} + %.2e + \frac{%.2e}{E_{t}}$' % (
+    popt[0], popt[1], popt[2])
+
+    plt.plot(new_x, new_y, 'r', label=fit)
+
+    plt.scatter(true, res)
 
     plt.xlim(0, 500)
     plt.title("%s Energy resolution" % particle)
     plt.xlabel("True energy (GeV)")
     plt.ylabel(r"$\frac{\sigma(\Delta E)}{E_t}$", size=18)
+    plt.legend(prop={'size': 15})
 
 
 def histRelDif(target, pred, nbins=550, lim=20, lim_l=0, lim_r=550, particle=""):
