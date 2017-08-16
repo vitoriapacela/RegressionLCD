@@ -298,9 +298,10 @@ def RelTarget(target, pred, particle="", nbins=200):
     plt.hist2d(target, rDifference, bins=nbins, norm=LogNorm(), cmap="cool")
 
     # plt.xlim(lim_l, lim_r)
-    plt.ylim(-100, 100)
+    plt.ylim(-100, 100)  # there seems to be a bug in pyplot that creates a bunch of white space in the figure
     plt.colorbar()
-    plt.axis('tight')
+    # plt.axis()
+
     plt.show()
     # plt.savefig("relXtarget_%d_%d.jpg" % (lim_l, lim_r))
 
