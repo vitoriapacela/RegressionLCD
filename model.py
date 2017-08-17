@@ -30,7 +30,7 @@ def loadModel(name, weights=False):
     # load weights into new model
     if weights == True:
         model.load_weights('%s.h5' % name)
-    # print model.summary()
+    # print(model.summary())
 
     print("Loaded model from disk")
     return model

@@ -186,10 +186,10 @@ def histEDif(target, pred, nbins=1500, lim=25, lim_l=0, lim_r=550, particle=""):
     # the histogram of the data
 
     mean = np.mean(difference)
-    # print mean
+    # print(mean)
 
     std = np.std(difference)  # standard deviation
-    # print std
+    # print(std)
 
     error = std / np.sqrt(len(target))
     # labels=['Mean: %.2f' % mean, 'Standard deviation: %.2f' % std]
@@ -209,8 +209,8 @@ def histEDif(target, pred, nbins=1500, lim=25, lim_l=0, lim_r=550, particle=""):
     # text has to be defined after setting the limits
     plt.text(0.3 * max(plt.xlim()), 0.6 * max(plt.ylim()),
              'Mean: %.2f $\pm$ %.2f \nStd. dev.: %.2f' % (mean, error, std))
-    # print max(plt.xlim())
-    # print type(max(plt.xlim()))
+    # print(max(plt.xlim()))
+    # print(type(max(plt.xlim())))
     # plt.axis('tight')
     plt.show()
     # plt.savefig("histDif_%d_%d.jpg" % (lim_l, lim_r))
@@ -237,8 +237,8 @@ def resolution(true, pred, particle=""):
         return a / np.sqrt(res) + b + c / res
 
     popt, pcov = curve_fit(func, true, res)
-    print popt
-    print pcov
+    print(popt)
+    print(pcov)
 
     # sorting the data so that it can be plot
     import itertools
@@ -254,7 +254,7 @@ def resolution(true, pred, particle=""):
     plt.scatter(true, res)
 
     plt.xlim(0, 500)
-    plt.title("%s Energy resolution" % particle)
+    plt.title("%s Energy Resolution" % particle)
     plt.xlabel("True energy (GeV)")
     plt.ylabel(r"$\frac{\sigma(\Delta E)}{E_t}$", size=18)
     plt.legend(prop={'size': 15})
@@ -283,11 +283,11 @@ def histRelDif(target, pred, nbins=550, lim=20, lim_l=0, lim_r=550, particle="")
     # the histogram of the data
 
     mean = np.mean(difference)
-    # print mean
+    # print(mean)
     std = np.std(difference)  # standard deviation
-    # print std
+    # print(std)
     error = std / np.sqrt(len(target))
-    # print error
+    # print(error)
 
     n, bins, patches = plt.hist(difference, nbins, normed=1, facecolor='green', alpha=0.75)
 
@@ -513,7 +513,7 @@ def plotN(inp, stds, sizes, what, particle=""):
     plt.xlabel("Energy", size=16)
 
     n = len(inp)
-    # print n
+    # print(n)
     iSize = 500 / n
 
     if what == "means":

@@ -102,8 +102,8 @@ def _genSum(generator):
         s_hcal = s(hcal)
         sums = np.array([s_ecal, s_hcal])
         reshaped = sums.reshape(500,2)
-        # print reshaped.shape
-        # print reshaped
+        # print(reshaped.shape)
+        # print(reshaped)
         yield [ecal, hcal, sums], true
 
 
