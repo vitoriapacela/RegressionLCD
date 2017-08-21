@@ -800,7 +800,7 @@ def plotBins(nbins, true, pred, particle=""):
     res(rStds, particle=particle)
 
 
-def plot_all(true, pred, particle=""):
+def plot_all(true, pred, particle="", nbins=10):
     '''
     Creates all the relevant plots for the analysis.
     :parameter true: array of energy targets (true value label).
@@ -809,12 +809,14 @@ def plot_all(true, pred, particle=""):
     :type pred: numpy.ndarray
     :parameter particle: particle type (electron, photon, charged pion, neutral pion)
     :type particle: str
+    :parameter nbins: number of bins.
+    :type nbins: int
     '''
     PredictedTarget(true, pred, particle=particle)
     histEDif(true, pred, particle=particle)
     histRelDif(true, pred, particle=particle)
     RelTarget(true, pred, particle=particle)
-    plotBins(10, true, pred, particle=particle)
+    plotBins(nbins, true, pred, particle=particle)
 
 
 def plotSumXTarget(target, inSum):
@@ -861,3 +863,20 @@ def SumTarget(target, inSum):
     plt.legend()
     plt.colorbar()
     plt.show()
+
+
+def saveTruePred(name, true, pred):
+    '''
+    Saves true energy and prediction energy arrays into an HDF5 file.
+    :parameter name: name of the file to be saved.
+    :type name: str.
+    :parameter true: array of energy targets (true value label).
+    :type true: numpy.ndarray
+    :parameter pred: array of predictions from testing.
+    :type pred: numpy.ndarray
+    '''
+    true_pred = np.array([true, pred])
+    # to fix and implement: if file is already open, continue
+    new_file = h5py.File(name + "TruePred.h5", 'w')
+    ds = new_file.create_dataset("true_pred", data=true_pred)
+    new_file.close()
