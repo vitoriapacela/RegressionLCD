@@ -4,13 +4,19 @@ Contains custom utilities for plotting and displaying tested data.
 Author: Vitoria Barin Pacela
 e-mail: vitoria.barimpacela@helsinki.fi
 '''
-
 import matplotlib.pyplot as plt
 import numpy as np
 #import matplotlib.mlab as mlab
 #from scipy.stats import norm
 import os, sys
 from matplotlib.colors import LogNorm
+from scipy.optimize import curve_fit
+
+if __package__ is None:
+    sys.path.append(os.path.realpath("/data/shared/Software/CMS_Deep_Learning"))
+
+from CMS_Deep_Learning.io import gen_from_data, retrieve_data
+from CMS_Deep_Learning.postprocessing.metrics import distribute_to_bins
 
 def show_losses(histories):
     '''
@@ -218,6 +224,7 @@ def histEDif(target, pred, nbins=1500, lim=25, lim_l=0, lim_r=550, particle=""):
 
 def resolution(true, pred, particle=""):
     '''
+    NOT USEFUL.
     Plots the energy resolution of the calorimeter for the data used.
     :parameter true: array of energy targets (true value label).
     :type true: numpy.ndarray
@@ -448,11 +455,11 @@ def binning(nbins, label, pred):
     :rtype: array, array, array, array, array, array.
     '''
 
-    if __package__ is None:
-        sys.path.append(os.path.realpath("/data/shared/Software/CMS_Deep_Learning"))
+    #if __package__ is None:
+    #    sys.path.append(os.path.realpath("/data/shared/Software/CMS_Deep_Learning"))
 
-    from CMS_Deep_Learning.io import gen_from_data, retrieve_data
-    from CMS_Deep_Learning.postprocessing.metrics import distribute_to_bins
+    #from CMS_Deep_Learning.io import gen_from_data, retrieve_data
+    #from CMS_Deep_Learning.postprocessing.metrics import distribute_to_bins
 
     out, x, y = distribute_to_bins(label, [label, pred], nb_bins=nbins, equalBins=True)
     # x -> true
@@ -491,15 +498,15 @@ def binning(nbins, label, pred):
         eRes = std / np.mean(x[i])
         res.append(eRes)
 
-
     return x, y, means, rMeans, stds, rStds, sizes, res
 
 
 def plotN(inp, stds, sizes, what, particle=""):
     '''
+    TOO LONG AND COMPLICATED. CHECK METHODS BELOW.
     Plots the means or stds (normalized or not) for the bins of energy.
-    :param input: array containing the data to be plotted (means, rMeans, stds or rStds).
-    :type input: array
+    :param inp: array containing the data to be plotted (means, rMeans, stds or rStds).
+    :type inp: array
     :param stds: stds array to calculate the error.
     :type stds: array
     :param sizes: array containing the number of samples in each bin, to calculate the error.
@@ -577,6 +584,237 @@ def plotN(inp, stds, sizes, what, particle=""):
     plt.legend(loc='best', bbox_to_anchor=(1.52, 0.9))
     plt.show()
     # plt.savefig("means.jpg")
+
+
+def means(means, stds, sizes, particle =""):
+    '''
+    Plots the absolute mean for each bin of energy.
+    :param means: array containing the means to be plotted.
+    :type means: array
+    :param stds: stds array to calculate the error.
+    :type stds: array
+    :param sizes: array containing the number of samples in each bin, to calculate the error.
+    :type sizes: array
+    :parameter particle: name of the particle in the dataset, for the title.
+    :type particle: str
+    '''
+
+    n = len(means)
+    # print(n)
+    iSize = 500 / n
+
+    for i in range(0, n):
+        x_axis = (i * iSize + (i + 1) * iSize) / 2
+        error = stds[i] / np.sqrt(sizes[i])
+        plt.scatter(x_axis, means[i], color='purple', alpha=0.5
+                    # , label='%d to %d GeV' % (i * iSize, (i + 1) * iSize)
+                    )
+        plt.errorbar(x_axis, means[i], yerr=error, color='black')
+
+    plt.figure(figsize=(5, 5))
+    plt.xlabel("Energy", size=16)
+    plt.ylabel("$\mu_{\Delta E}$ (GeV)", size=19)
+    plt.title("%s Means" % particle, size=16)
+    plt.xlim(0, 500)
+    #plt.legend(loc='best', bbox_to_anchor=(1.52, 0.9))
+    plt.show()
+    # plt.savefig("means.jpg")
+
+
+def rMeans(rMeans, stds, sizes, particle =""):
+    '''
+    Plots the relative mean for each bin of energy.
+    :param rMeans: array containing the relative means.
+    :type rMeans: array
+    :param stds: stds array to calculate the error.
+    :type stds: array
+    :param sizes: array containing the number of samples in each bin, to calculate the error.
+    :type sizes: array
+    :parameter particle: name of the particle in the dataset, for the title.
+    :type particle: str
+    '''
+
+    n = len(rMeans)
+    # print(n)
+    iSize = 500 / n
+
+    for i in range(0, n):
+        energy = (i * iSize + (i + 1) * iSize) / 2
+        error = stds[i] / np.sqrt(sizes[i])
+        plt.scatter(energy, rMeans[i], color='pink', alpha=0.8
+                    # , label='%d to %d GeV' % (i * iSize, (i + 1) * iSize)
+                    )
+        plt.errorbar(energy, rMeans[i], yerr=error, color='purple')
+
+    plt.figure(figsize=(5, 5))
+    plt.xlabel("Energy", size=16)
+    plt.ylabel(r"$\mu_{\frac{\Delta E}{E}}$ (%)", size=19)
+    plt.title("%s Relative means" % particle, size=16)
+    plt.xlim(0, 500)
+    #plt.legend(loc='best', bbox_to_anchor=(1.52, 0.9))
+    plt.show()
+    # plt.savefig("rMeans.jpg")
+
+
+def stds(stds, particle =""):
+    '''
+    Plots the absolute standard deviation for each bin of energy.
+    :param stds: array containing the standard deviations.
+    :type stds: array
+    :param sizes: array containing the number of samples in each bin, to calculate the error.
+    :type sizes: array
+    :parameter particle: name of the particle in the dataset, for the title.
+    :type particle: str
+    '''
+
+    n = len(stds)
+    # print(n)
+    iSize = 500 / n
+
+    for i in range(0, n):
+        energy = (i * iSize + (i + 1) * iSize) / 2
+        plt.scatter(energy, stds[i], color='blue', alpha=0.5
+                    # , label='%d to %d GeV' % (i * iSize, (i + 1) * iSize)
+                    )
+
+    plt.figure(figsize=(5, 5))
+    plt.xlabel("Energy", size=16)
+    plt.ylabel("$\sigma_{\Delta E}$ (GeV)", size=19)
+    plt.title("%s Standard deviations" % particle, size=16)
+    plt.xlim(0, 500)
+    #plt.legend(loc='best', bbox_to_anchor=(1.52, 0.9))
+    plt.show()
+    # plt.savefig("stds.jpg")
+
+
+def rStds(rStds, particle =""):
+    '''
+    Plots the relative standard deviation for each bin of energy.
+    :param rStds: array containing the relative standard deviations.
+    :type rStds: array
+    :param sizes: array containing the number of samples in each bin, to calculate the error.
+    :type sizes: array
+    :parameter particle: name of the particle in the dataset, for the title.
+    :type particle: str
+    '''
+
+    n = len(rStds)
+    # print(n)
+    iSize = 500 / n
+
+    for i in range(0, n):
+        energy = (i * iSize + (i + 1) * iSize) / 2
+        plt.scatter(energy, rStds[i], color='orange', alpha=0.5
+                    # , label='%d to %d GeV' % (i * iSize, (i + 1) * iSize)
+                    )
+
+    plt.figure(figsize=(5, 5))
+    plt.xlabel("Energy", size=16)
+    plt.ylabel(r"$\sigma_{\frac{\Delta E}{E}}$ (%)", size=19)
+    plt.title("%s Relative standard deviations" % particle, size=16)
+    plt.xlim(0, 500)
+    #plt.legend(loc='best', bbox_to_anchor=(1.52, 0.9))
+    plt.show()
+    # plt.savefig("rStds.jpg")
+
+
+def res(res, particle =""):
+    '''
+    Plots the energy resolution of the calorimeter and fits its equation.
+    :param res: array containing the standard deviation divided by the mean of each bin.
+    :type res: array
+    :param sizes: array containing the number of samples in each bin, to calculate the error.
+    :type sizes: array
+    :parameter particle: name of the particle in the dataset, for the title.
+    :type particle: str
+    '''
+
+    n = len(res)
+    # print(n)
+    iSize = 500 / n
+
+    energies = []
+
+    for i in range(0, n):
+        energy = (i * iSize + (i + 1) * iSize) / 2
+        energies.append(energy)
+
+        plt.scatter(energy, res[i], color='blue', alpha=0.5
+                    # , label='%d to %d GeV' % (i * iSize, (i + 1) * iSize)
+                    )
+
+    ####### energy resolution of the calorimeter ############
+    plt.rcParams['agg.path.chunksize'] = 10000
+    #from scipy.optimize import curve_fit
+
+    def func(E, a, b, c):
+        # equation to be fit in the data
+        return a / np.sqrt(E) + b + c / E
+
+    popt, pcov = curve_fit(func, energies, inp)
+    print(popt)
+    # print(pcov)
+
+    y = func(energies, *popt)
+
+    fit = r'$\frac{\sigma(\Delta E)}{E_{t}} = \frac{%.2e}{\sqrt{E_{t}}} + %.2e + \frac{%.2e}{E_{t}}$' % (
+        popt[0], popt[1], popt[2])
+
+    plt.plot(energies, y, 'r', label=fit)
+
+    # sorting the data so that it can be plot
+    # import itertools
+    # lists = sorted(itertools.izip(*[n, y]))
+    # new_x, new_y = list(itertools.izip(*lists))
+
+    # plt.plot(new_x, new_y, 'r', label=fit)
+    #########################################################
+
+    plt.figure(figsize=(5, 5))
+    plt.xlabel("Energy", size=16)
+    plt.ylabel(r"$\frac{\sigma({\Delta E})}{E_{mean}}$ (GeV)", size=19)
+    plt.title("%s Energy resolution" % particle, size=16)
+    plt.xlim(0, 500)
+    plt.legend(loc='best', bbox_to_anchor=(1.52, 0.9))
+    plt.show()
+    # plt.savefig("res.jpg")
+
+
+def plotBins(nbins, true, pred, particle=""):
+    '''
+    Distribute the data to bins and plots the means, relative means, standard deviations, relative standard deviations and the energy resolution.
+    The energies are divided into n bins of the same size.
+    :parameter nbins: number of bins.
+    :type nbins: int
+    :parameter true: array of energy targets (true value label).
+    :type true: numpy.ndarray
+    :parameter pred: array of predictions from testing.
+    :type pred: numpy.ndarray
+    '''
+    x, y, means, rMeans, stds, rStds, sizes, res = binning(nbins, true, pred)
+    means(means, stds, sizes, particle=particle)
+    rMeans(rMeans, stds, sizes, particle=particle)
+    stds(stds, particle=particle)
+    rStds(rStds, particle=particle)
+    res(res, particle=particle)
+    res(rStds, particle=particle)
+
+
+def plot_all(true, pred, particle=""):
+    '''
+    Creates all the relevant plots for the analysis.
+    :parameter true: array of energy targets (true value label).
+    :type true: numpy.ndarray
+    :parameter pred: array of predictions from testing.
+    :type pred: numpy.ndarray
+    :parameter particle: particle type (electron, photon, charged pion, neutral pion)
+    :type particle: str
+    '''
+    PredictedTarget(true, pred, particle=particle)
+    histEDif(true, pred, particle=particle)
+    histRelDif(true, pred, particle=particle)
+    RelTarget(true, pred, particle=particle)
+    plotBins(10, true, pred, particle=particle)
 
 
 def plotSumXTarget(target, inSum):
