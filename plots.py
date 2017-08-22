@@ -621,7 +621,7 @@ def means(means, stds, sizes, particle =""):
         plt.errorbar(x_axis, means[i], yerr=error, color='black')
 
     plt.xlabel("Energy", size=16)
-    plt.ylabel("$\mu_{\Delta E}$ (GeV)", size=19)
+    plt.ylabel("$\mu(\Delta E)$ (GeV)", size=19)
     plt.title("%s Means" % particle, size=16)
     plt.xlim(0, 500)
     #plt.legend(loc='best', bbox_to_anchor=(1.52, 0.9))
@@ -656,7 +656,7 @@ def rMeans(rMeans, stds, sizes, particle =""):
         plt.errorbar(energy, rMeans[i], yerr=error, color='purple')
 
     plt.xlabel("Energy", size=16)
-    plt.ylabel(r"$\mu_{\frac{\Delta E}{E_{true}}}$ (%)", size=19)
+    plt.ylabel(r"$\mu(\frac{\Delta E}{E_{true}})$ (%)", size=19)
     plt.title("%s Relative means" % particle, size=16)
     plt.xlim(0, 500)
     #plt.legend(loc='best', bbox_to_anchor=(1.52, 0.9))
@@ -669,8 +669,6 @@ def stds(stds, particle =""):
     Plots the absolute standard deviation for each bin of energy.
     :param stds: array containing the standard deviations.
     :type stds: array
-    :param sizes: array containing the number of samples in each bin, to calculate the error.
-    :type sizes: array
     :parameter particle: name of the particle in the dataset, for the title.
     :type particle: str
     '''
@@ -688,7 +686,7 @@ def stds(stds, particle =""):
                     )
 
     plt.xlabel("Energy", size=16)
-    plt.ylabel("$\sigma_{\Delta E}$ (GeV)", size=19)
+    plt.ylabel("$\sigma(\Delta E)$ (GeV)", size=19)
     plt.title("%s Standard deviations" % particle, size=16)
     plt.xlim(0, 500)
     #plt.legend(loc='best', bbox_to_anchor=(1.52, 0.9))
@@ -701,8 +699,6 @@ def rStds(rStds, particle =""):
     Plots the relative standard deviation for each bin of energy.
     :param rStds: array containing the relative standard deviations.
     :type rStds: array
-    :param sizes: array containing the number of samples in each bin, to calculate the error.
-    :type sizes: array
     :parameter particle: name of the particle in the dataset, for the title.
     :type particle: str
     '''
@@ -719,7 +715,7 @@ def rStds(rStds, particle =""):
                     )
 
     plt.xlabel("Energy", size=16)
-    plt.ylabel(r"$\sigma_{\frac{\Delta E}{E_{true}}}$ (%)", size=19)
+    plt.ylabel(r"$\sigma(\frac{\Delta E}{E_{true}})$ (%)", size=19)
     plt.title("%s Relative standard deviations" % particle, size=16)
     plt.xlim(0, 500)
     #plt.legend(loc='best', bbox_to_anchor=(1.52, 0.9))
@@ -732,8 +728,6 @@ def res(res, particle="", verbose=False):
     Plots the energy resolution of the calorimeter and fits its equation.
     :param res: array containing the standard deviation divided by the mean of each bin.
     :type res: array
-    :param sizes: array containing the number of samples in each bin, to calculate the error.
-    :type sizes: array
     :parameter particle: name of the particle in the dataset, for the title.
     :type particle: str
     :parameter verbose: whether to print a, b and c for the fit.
