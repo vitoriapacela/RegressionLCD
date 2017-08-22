@@ -885,3 +885,16 @@ def saveTruePred(name, true, pred):
     new_file = h5py.File(name + "TruePred.h5", 'w')
     ds = new_file.create_dataset("true_pred", data=true_pred)
     new_file.close()
+
+
+def true_pred_from_HDF5(file_name):
+    '''
+    Loads true and predicted energy arrays from HDF5 file.
+    :parameter file_name: name of the HDF5 file containing true and pred arrays.
+    :type file_name: str
+    :return: true and pred arrays.
+    :rtype: numpy.ndarray, numpy.ndarray
+    '''
+    f = h5py.File(file_name + ".h5", 'r')
+    true, pred = f["true_pred"][0], f["true_pred"][1]
+    return true, pred
