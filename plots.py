@@ -848,18 +848,20 @@ def plotSumXTarget(target, inSum):
     plt.show()
 
 
-def SumTarget(target, inSum):
+def SumTarget(target, inSum, particle =""):
     '''
     Plots the sum of energies against the true energy as a 2D histogram.
     :type target: numpy.ndarray.
-    :param target: array of true energy values.
+    :parameter target: array of true energy values.
     :type inSum: numpy.ndarray.
-    :param inSum: array of the input energy sums.
+    :parameter inSum: array of the input energy sums.
+    :type particle: str
+    :parameter particle: name of the particle
     '''
     plt.figure(figsize=(5, 5))
     plt.xlabel("True energy (GeV)")
     plt.ylabel("Summed energy (GeV)")
-    plt.title("Sum X True energy")
+    plt.title(particle + "Sum X True energy")
 
     plt.hist2d(target, inSum, bins=200, norm=LogNorm(), cmap="cool")
 
