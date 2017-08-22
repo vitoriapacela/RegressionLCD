@@ -123,7 +123,7 @@ def plotPredictedXTarget(target, predicted, lim_l=0, lim_r=550, particle=""):
     '''
 
     plt.figure(figsize=(5, 5))
-    plt.xlabel("Target energy (GeV)")
+    plt.xlabel("True energy (GeV)")
     plt.ylabel("Predicted energy (GeV)")
     plt.title(particle)
     #plt.title(u"%s Predicted X true energy \n Energies between %d and %d GeV" % (particle, lim_l, lim_r))
@@ -154,7 +154,7 @@ def PredictedTarget(target, predicted, lim_l=0, lim_r=550, particle="", nbins=20
 
 
     plt.figure(figsize=(5, 5))
-    plt.xlabel("Target energy (GeV)")
+    plt.xlabel("True energy (GeV)")
     plt.ylabel("Predicted energy (GeV)")
     plt.title(particle)
     # plt.title(u"%s Predicted X true energy \n Energies between %d and %d GeV" % (particle, lim_l, lim_r))
@@ -323,9 +323,10 @@ def RelTarget(target, pred, particle="", nbins=200):
     '''
 
     plt.figure(figsize=(5, 5))
-    plt.xlabel("Target energy (GeV)")
-    plt.ylabel("Relative energy difference (%)")
-    plt.title("%s \n Relative energy difference X Target energy" % particle)
+    plt.xlabel("True energy (GeV)")
+    #plt.ylabel("Relative energy difference (%)")
+    plt.ylabel(r'$\frac{(E_{true} - E_{pred})}{E_{true}}$ (%)', size=18)
+    plt.title("%s \n Relative energy difference X True energy" % particle)
 
     rDifference = rDif(target, pred)
 
@@ -358,7 +359,7 @@ def plotRelXTarget(target, relative, lim_l=0, lim_r=500, particle=""):
     plt.figure(figsize=(5, 5))
     plt.xlabel("Target energy (GeV)")
     plt.ylabel("Relative energy difference (%)")
-    plt.title("%s \n Relative energy difference X Target energy" % particle)
+    plt.title("%s \n Relative energy difference X True energy" % particle)
 
     plt.scatter(target, relative, color='g', alpha=0.5)
 
@@ -371,6 +372,7 @@ def plotRelXTarget(target, relative, lim_l=0, lim_r=500, particle=""):
 
 def plotMeanXEnergy(target, predicted, lim_y=0.14, lim_l=0, lim_r=520, limit=False):
     '''
+    Not so useful.
     Plots the prediction error.
     (Mean of the distribution of the difference between the target and the predicted energy,
      divided by the prediction energy, against the target energy).
@@ -407,8 +409,9 @@ def plotMeanXEnergy(target, predicted, lim_y=0.14, lim_l=0, lim_r=520, limit=Fal
 
 def plotStdXEnergy(target, predicted, lim_y=2.7, lim_l=0, lim_r=520, limit=False):
     '''
-    Plots the prediction deviation depending on the true energy.
+    Not so useful.
 
+    Plots the prediction deviation depending on the true energy.
     (Standard deviation of the distribution of the difference between the target and the predicted energy,
     divided by the predicted energy, against the target energy).
 
@@ -465,8 +468,8 @@ def binning(nbins, label, pred, plot=False):
     #from CMS_Deep_Learning.postprocessing.metrics import distribute_to_bins
 
     out, x, y = distribute_to_bins(label, [label, pred], nb_bins=nbins, equalBins=True)
-    # x -> true
-    # y -> pred
+    # x -> true energy
+    # y -> pred energy
     iSize = 500 / nbins
 
     means = []
@@ -653,7 +656,7 @@ def rMeans(rMeans, stds, sizes, particle =""):
         plt.errorbar(energy, rMeans[i], yerr=error, color='purple')
 
     plt.xlabel("Energy", size=16)
-    plt.ylabel(r"$\mu_{\frac{\Delta E}{E}}$ (%)", size=19)
+    plt.ylabel(r"$\mu_{\frac{\Delta E}{E_{true}}}$ (%)", size=19)
     plt.title("%s Relative means" % particle, size=16)
     plt.xlim(0, 500)
     #plt.legend(loc='best', bbox_to_anchor=(1.52, 0.9))
@@ -716,7 +719,7 @@ def rStds(rStds, particle =""):
                     )
 
     plt.xlabel("Energy", size=16)
-    plt.ylabel(r"$\sigma_{\frac{\Delta E}{E}}$ (%)", size=19)
+    plt.ylabel(r"$\sigma_{\frac{\Delta E}{E_{true}}}$ (%)", size=19)
     plt.title("%s Relative standard deviations" % particle, size=16)
     plt.xlim(0, 500)
     #plt.legend(loc='best', bbox_to_anchor=(1.52, 0.9))
@@ -781,7 +784,7 @@ def res(res, particle="", verbose=False):
     #########################################################
 
     plt.xlabel("Energy", size=16)
-    plt.ylabel(r"$\frac{\sigma({\Delta E})}{E_{mean}}$ (GeV)", size=19)
+    plt.ylabel(r"$\frac{\sigma({\Delta E})}{E_{true}}$ (GeV)", size=19)
     plt.title("%s Energy resolution" % particle, size=16)
     plt.xlim(0, 500)
     plt.legend(loc='best', bbox_to_anchor=(1.52, 0.9))
@@ -838,7 +841,7 @@ def plotSumXTarget(target, inSum):
     '''
 
     plt.figure(figsize=(5, 5))
-    plt.xlabel("Target energy (GeV)")
+    plt.xlabel("True energy (GeV)")
     plt.ylabel("Summed energy (GeV)")
     plt.title("Sum X True energy")
 
@@ -860,7 +863,7 @@ def SumTarget(target, inSum):
     :param inSum: array of the input energy sums.
     '''
     plt.figure(figsize=(5, 5))
-    plt.xlabel("Target energy (GeV)")
+    plt.xlabel("True energy (GeV)")
     plt.ylabel("Summed energy (GeV)")
     plt.title("Sum X True energy")
 
