@@ -6,12 +6,12 @@ e-mail: vitoria.barimpacela@helsinki.fi
 '''
 import matplotlib.pyplot as plt
 import numpy as np
-#import matplotlib.mlab as mlab
-#from scipy.stats import norm
 import h5py
 import os, sys
 from matplotlib.colors import LogNorm
 from scipy.optimize import curve_fit
+#import matplotlib.mlab as mlab
+#from scipy.stats import norm
 
 if __package__ is None:
     sys.path.append(os.path.realpath("/data/shared/Software/CMS_Deep_Learning"))
@@ -603,6 +603,7 @@ def means(means, stds, sizes, particle =""):
     :parameter particle: name of the particle in the dataset, for the title.
     :type particle: str
     '''
+    plt.figure(figsize=(5, 5))
 
     n = len(means)
     # print(n)
@@ -616,7 +617,6 @@ def means(means, stds, sizes, particle =""):
                     )
         plt.errorbar(x_axis, means[i], yerr=error, color='black')
 
-    plt.figure(figsize=(5, 5))
     plt.xlabel("Energy", size=16)
     plt.ylabel("$\mu_{\Delta E}$ (GeV)", size=19)
     plt.title("%s Means" % particle, size=16)
@@ -638,6 +638,7 @@ def rMeans(rMeans, stds, sizes, particle =""):
     :parameter particle: name of the particle in the dataset, for the title.
     :type particle: str
     '''
+    plt.figure(figsize=(5, 5))
 
     n = len(rMeans)
     # print(n)
@@ -651,7 +652,6 @@ def rMeans(rMeans, stds, sizes, particle =""):
                     )
         plt.errorbar(energy, rMeans[i], yerr=error, color='purple')
 
-    plt.figure(figsize=(5, 5))
     plt.xlabel("Energy", size=16)
     plt.ylabel(r"$\mu_{\frac{\Delta E}{E}}$ (%)", size=19)
     plt.title("%s Relative means" % particle, size=16)
@@ -676,13 +676,14 @@ def stds(stds, particle =""):
     # print(n)
     iSize = 500 / n
 
+    plt.figure(figsize=(5, 5))
+
     for i in range(0, n):
         energy = (i * iSize + (i + 1) * iSize) / 2
         plt.scatter(energy, stds[i], color='blue', alpha=0.5
                     # , label='%d to %d GeV' % (i * iSize, (i + 1) * iSize)
                     )
 
-    plt.figure(figsize=(5, 5))
     plt.xlabel("Energy", size=16)
     plt.ylabel("$\sigma_{\Delta E}$ (GeV)", size=19)
     plt.title("%s Standard deviations" % particle, size=16)
@@ -702,6 +703,7 @@ def rStds(rStds, particle =""):
     :parameter particle: name of the particle in the dataset, for the title.
     :type particle: str
     '''
+    plt.figure(figsize=(5, 5))
 
     n = len(rStds)
     # print(n)
@@ -713,7 +715,6 @@ def rStds(rStds, particle =""):
                     # , label='%d to %d GeV' % (i * iSize, (i + 1) * iSize)
                     )
 
-    plt.figure(figsize=(5, 5))
     plt.xlabel("Energy", size=16)
     plt.ylabel(r"$\sigma_{\frac{\Delta E}{E}}$ (%)", size=19)
     plt.title("%s Relative standard deviations" % particle, size=16)
@@ -723,7 +724,7 @@ def rStds(rStds, particle =""):
     # plt.savefig("rStds.jpg")
 
 
-def res(res, particle =""):
+def res(res, particle="", verbose=False):
     '''
     Plots the energy resolution of the calorimeter and fits its equation.
     :param res: array containing the standard deviation divided by the mean of each bin.
@@ -732,7 +733,10 @@ def res(res, particle =""):
     :type sizes: array
     :parameter particle: name of the particle in the dataset, for the title.
     :type particle: str
+    :parameter verbose: whether to print a, b and c for the fit.
+    :type verbose: bool
     '''
+    plt.figure(figsize=(5, 5))
 
     n = len(res)
     # print(n)
@@ -757,8 +761,9 @@ def res(res, particle =""):
         return a / np.sqrt(E) + b + c / E
 
     popt, pcov = curve_fit(func, energies, res)
-    print(popt)
-    # print(pcov)
+    if (verbose == True):
+        print(popt)
+        # print(pcov)
 
     y = func(energies, *popt)
 
@@ -775,7 +780,6 @@ def res(res, particle =""):
     # plt.plot(new_x, new_y, 'r', label=fit)
     #########################################################
 
-    plt.figure(figsize=(5, 5))
     plt.xlabel("Energy", size=16)
     plt.ylabel(r"$\frac{\sigma({\Delta E})}{E_{mean}}$ (GeV)", size=19)
     plt.title("%s Energy resolution" % particle, size=16)
