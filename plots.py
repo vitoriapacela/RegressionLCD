@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 #import matplotlib.mlab as mlab
 #from scipy.stats import norm
+import h5py
 import os, sys
 from matplotlib.colors import LogNorm
 from scipy.optimize import curve_fit
@@ -442,7 +443,7 @@ def plotStdXEnergy(target, predicted, lim_y=2.7, lim_l=0, lim_r=520, limit=False
     # plt.savefig("stdXenergy_%d_%d.jpg" % (lim_l, lim_r))
 
 
-def binning(nbins, label, pred):
+def binning(nbins, label, pred, plot=False):
     '''
     Divides the data into n bins containing energy ranges of the same size.
     :parameter nbins: number of bins.
@@ -451,6 +452,8 @@ def binning(nbins, label, pred):
     :type label: numpy.ndarray
     :parameter pred: array of predictions from testing.
     :type pred: numpy.ndarray
+    :parameter plot: whether to plot Predicted X Target and histogram for each energy bin.
+    :type plot: bool
     :return: arrays of means, relative means, standard deviations, relative standard deviations, size of the bins, and energy resolution.
     :rtype: array, array, array, array, array, array.
     '''
@@ -475,10 +478,12 @@ def binning(nbins, label, pred):
 
     for i in range(0, nbins):
         sizes.append(len(x[i]))
-        plotPredictedXTarget(x[i], y[i], i * iSize, (i + 1) * iSize)
-        PredictedTarget(x[i], y[i], i * iSize, (i + 1) * iSize)
-        # histEDif(x[i], y[i], nbins=200, lim=20, lim_l=i*iSize, lim_r=(i+1)*iSize)
-        # histRelDif(x[i], y[i], nbins=150, lim=15, lim_l=i*iSize, lim_r=(i+1)*iSize)
+
+        if (plot == True):
+            #plotPredictedXTarget(x[i], y[i], i * iSize, (i + 1) * iSize)
+            PredictedTarget(x[i], y[i], i * iSize, (i + 1) * iSize)
+            # histEDif(x[i], y[i], nbins=200, lim=20, lim_l=i*iSize, lim_r=(i+1)*iSize)
+            histRelDif(x[i], y[i], nbins=150, lim=15, lim_l=i*iSize, lim_r=(i+1)*iSize)
 
         difference = dif(x[i], y[i])
         relDiff = rDif(x[i], y[i])
@@ -751,7 +756,7 @@ def res(res, particle =""):
         # equation to be fit in the data
         return a / np.sqrt(E) + b + c / E
 
-    popt, pcov = curve_fit(func, energies, inp)
+    popt, pcov = curve_fit(func, energies, res)
     print(popt)
     # print(pcov)
 
@@ -791,13 +796,13 @@ def plotBins(nbins, true, pred, particle=""):
     :parameter pred: array of predictions from testing.
     :type pred: numpy.ndarray
     '''
-    x, y, means, rMeans, stds, rStds, sizes, res = binning(nbins, true, pred)
-    means(means, stds, sizes, particle=particle)
-    rMeans(rMeans, stds, sizes, particle=particle)
-    stds(stds, particle=particle)
-    rStds(rStds, particle=particle)
-    res(res, particle=particle)
-    res(rStds, particle=particle)
+    x_ar, y_ar, means_ar, rMeans_ar, stds_ar, rStds_ar, sizes_ar, res_ar = binning(nbins, true, pred)
+    means(means_ar, stds_ar, sizes_ar, particle=particle)
+    rMeans(rMeans_ar, stds_ar, sizes_ar, particle=particle)
+    stds(stds_ar, particle=particle)
+    rStds(rStds_ar, particle=particle)
+    res(res_ar, particle=particle)
+    res(rStds_ar, particle=particle)
 
 
 def plot_all(true, pred, particle="", nbins=10):
