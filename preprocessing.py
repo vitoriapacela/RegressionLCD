@@ -143,12 +143,14 @@ def inpSum(dir):
     return inSum
 
 
-def preSum(train_dir):
+def preSum(train_dir, particle=""):
     '''
     To be used before training for data visualization.
     Naive sum of the shower deposits in the ECAL and HCAL.
     :type train_dir: str.
-    :param train_dir: path to the training directory with HDF5 files.
+    :parameter train_dir: path to the training directory with HDF5 files.
+    :type particle: str.
+    :parameter particle: name of the particle.
     :return: energy targets and energy sum arrays.
     :rtype: numpy.ndarray, numpy.ndarray; shape: (n,) shape: (n,)
     '''
@@ -157,10 +159,29 @@ def preSum(train_dir):
                         input_keys=['ECAL', 'HCAL'])
     all_y = all_y[:, 1:]
     all_y = all_y.ravel()
-    print(all_y.shape)
+    #print(all_y.shape)
 
     # sum of ECAL and HCAL
     inSum = inpSum(train_dir)
 
+    # save arrays to HDF5
+    saveSum_toHDF5(particle, all_y, inSum)
+
     return all_y, inSum
 
+
+def saveSum_toHDF5(name, true, inSum):
+    '''
+    Saves true energy and prediction energy arrays into an HDF5 file.
+    :parameter name: name of the file to be saved.
+    :type name: str.
+    :parameter true: array of energy targets (true value label).
+    :type true: numpy.ndarray
+    :parameter inSum: array of predictions from testing.
+    :type inSum: numpy.ndarray
+    '''
+    true_sum = np.array([true, inSum])
+    # best implementation would be to check if the file exists. if not, create it. being lazy for now.
+    change_file = h5py.File(name + "TruePred.h5", 'a')
+    ds = change_file.create_dataset("true_sum", data=true_sum)
+    change_file.close()

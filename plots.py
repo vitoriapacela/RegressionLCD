@@ -726,7 +726,7 @@ def rStds(rStds, particle =""):
 def res(res, particle="", verbose=False):
     '''
     Plots the energy resolution of the calorimeter and fits its equation.
-    :param res: array containing the standard deviation divided by the mean of each bin.
+    :param res: array containing the relative standard deviation of each bin.
     :type res: array
     :parameter particle: name of the particle in the dataset, for the title.
     :type particle: str
@@ -901,3 +901,16 @@ def true_pred_from_HDF5(file_name):
     f = h5py.File(file_name + ".h5", 'r')
     true, pred = f["true_pred"][0], f["true_pred"][1]
     return true, pred
+
+
+def true_sum_from_HDF5(file_name):
+    '''
+    Loads true and predicted energy arrays from HDF5 file.
+    :parameter file_name: name of the HDF5 file containing true and pred arrays.
+    :type file_name: str
+    :return: true and pred arrays.
+    :rtype: numpy.ndarray, numpy.ndarray
+    '''
+    f = h5py.File(file_name + ".h5", 'r')
+    true, inSum = f["true_sum"][0], f["true_sum"][1]
+    return true, inSum
