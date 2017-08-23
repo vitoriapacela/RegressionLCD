@@ -2,9 +2,9 @@
 
 Repository for my SURF Caltech-CMS project on deep learning for imaging calorimetry in the LCD (Linear Collider Detector), in which we reconstruct the energy of the particles through regression.
 
-The notebooks that apply this back end to simulated data are in the [NotebooksLCD](https://github.com/vitoriapacela/NotebooksLCD) repository.
+This repository has data pre-processing functions, model topologies and post-processing functions to analyze the data.
 
-This repository has data pre-processing functions, model topologies and post-processing functions to analyze the results.
+The notebooks that apply this back end to simulated data are in the [NotebooksLCD](https://github.com/vitoriapacela/NotebooksLCD) repository.
 
 Pre-processing dependencies:
 Danny Weitecamp's [CMS_Deep_Learning package](https://github.com/DannyWeitekamp/CMS_Deep_Learning) for the data generator.
