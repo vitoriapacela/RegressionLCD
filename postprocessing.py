@@ -1,9 +1,10 @@
 '''
-plots.py
+postprocessing.py
 Contains custom utilities for plotting and displaying tested data.
 Author: Vitoria Barin Pacela
 e-mail: vitoria.barimpacela@helsinki.fi
 '''
+
 import matplotlib.pyplot as plt
 import numpy as np
 import h5py
@@ -914,3 +915,36 @@ def true_sum_from_HDF5(file_name):
     f = h5py.File(file_name + ".h5", 'r')
     true, inSum = f["true_sum"][0], f["true_sum"][1]
     return true, inSum
+
+
+def SumPredTrue(target, pred, inSum, particle=""):
+    '''
+    Plots in the same plot the distribution of the sum of energies against the true energy, and the linear fit of the predicted energy against the true energy.
+    :parameter target: array of energy targets (true value label).
+    :type target: numpy.ndarray
+    :parameter pred: array of predictions from testing.
+    :type pred: numpy.ndarray
+    :parameter inSum: array containing the energy sums.
+    :type inSum: numpy.ndarray
+    :parameter particle: name of the particle
+    :type particle: str
+    '''
+    plt.figure(figsize=(5, 5))
+    plt.xlabel("True energy (GeV)")
+    plt.ylabel("Predicted energy (GeV)")
+    plt.title(particle + "Comparison between summed and predicted energy")
+
+    # summed energy distribution:
+    plt.hist2d(target, inSum, bins=200, norm=LogNorm(), cmap="cool")
+
+    # pred X true linear fit:
+    fit = np.polyfit(target, pred, 1)
+    fit_fn = np.poly1d(fit)
+    plt.plot(target, fit_fn(target), 'r')
+
+    plt.xlim(0, 500)
+    # plt.ylim(0, 500)
+
+    plt.legend()
+    plt.colorbar()
+    plt.show()
