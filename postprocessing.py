@@ -5,6 +5,10 @@ Author: Vitoria Barin Pacela
 e-mail: vitoria.barimpacela@helsinki.fi
 '''
 
+# This file is already too long.
+# We can probably split it into classes containing analysis for individual particles
+# and for plotting multiple particles together.
+
 import matplotlib.pyplot as plt
 import numpy as np
 import h5py
@@ -595,7 +599,7 @@ def plotN(inp, stds, sizes, what, particle=""):
     # plt.savefig("means.jpg")
 
 
-def means(means, stds, sizes, particle =""):
+def means(means, stds, sizes, particle ="", col='purple'):
     '''
     Plots the absolute mean for each bin of energy.
     :param means: array containing the means to be plotted.
@@ -616,7 +620,7 @@ def means(means, stds, sizes, particle =""):
     for i in range(0, n):
         x_axis = (i * iSize + (i + 1) * iSize) / 2
         error = stds[i] / np.sqrt(sizes[i])
-        plt.scatter(x_axis, means[i], color='purple', alpha=0.5
+        plt.scatter(x_axis, means[i], color=col, alpha=0.5
                     # , label='%d to %d GeV' % (i * iSize, (i + 1) * iSize)
                     )
         plt.errorbar(x_axis, means[i], yerr=error, color='black')
@@ -630,7 +634,7 @@ def means(means, stds, sizes, particle =""):
     # plt.savefig("means.jpg")
 
 
-def rMeans(rMeans, stds, sizes, particle =""):
+def rMeans(rMeans, stds, sizes, particle ="", col='pink'):
     '''
     Plots the relative mean for each bin of energy.
     :param rMeans: array containing the relative means.
@@ -651,7 +655,7 @@ def rMeans(rMeans, stds, sizes, particle =""):
     for i in range(0, n):
         energy = (i * iSize + (i + 1) * iSize) / 2
         error = stds[i] / np.sqrt(sizes[i])
-        plt.scatter(energy, rMeans[i], color='pink', alpha=0.8
+        plt.scatter(energy, rMeans[i], color=col, alpha=0.8
                     # , label='%d to %d GeV' % (i * iSize, (i + 1) * iSize)
                     )
         plt.errorbar(energy, rMeans[i], yerr=error, color='purple')
@@ -665,7 +669,7 @@ def rMeans(rMeans, stds, sizes, particle =""):
     # plt.savefig("rMeans.jpg")
 
 
-def stds(stds, particle =""):
+def stds(stds, particle ="", col='blue'):
     '''
     Plots the absolute standard deviation for each bin of energy.
     :param stds: array containing the standard deviations.
@@ -682,7 +686,7 @@ def stds(stds, particle =""):
 
     for i in range(0, n):
         energy = (i * iSize + (i + 1) * iSize) / 2
-        plt.scatter(energy, stds[i], color='blue', alpha=0.5
+        plt.scatter(energy, stds[i], color=col, alpha=0.5
                     # , label='%d to %d GeV' % (i * iSize, (i + 1) * iSize)
                     )
 
@@ -695,14 +699,14 @@ def stds(stds, particle =""):
     # plt.savefig("stds.jpg")
 
 
-def rStds(rStds, particle =""):
-    '''
+def rStds(rStds, particle="", col='orange'):
+    """
     Plots the relative standard deviation for each bin of energy.
     :param rStds: array containing the relative standard deviations.
     :type rStds: array
     :parameter particle: name of the particle in the dataset, for the title.
     :type particle: str
-    '''
+    """
     plt.figure(figsize=(5, 5))
 
     n = len(rStds)
@@ -711,7 +715,7 @@ def rStds(rStds, particle =""):
 
     for i in range(0, n):
         energy = (i * iSize + (i + 1) * iSize) / 2
-        plt.scatter(energy, rStds[i], color='orange', alpha=0.5
+        plt.scatter(energy, rStds[i], color=col, alpha=0.5
                     # , label='%d to %d GeV' % (i * iSize, (i + 1) * iSize)
                     )
 
@@ -724,8 +728,8 @@ def rStds(rStds, particle =""):
     # plt.savefig("rStds.jpg")
 
 
-def res(res, particle="", verbose=False):
-    '''
+def res(res, particle="", verbose=False, col='blue'):
+    """
     Plots the energy resolution of the calorimeter and fits its equation.
     :param res: array containing the relative standard deviation of each bin.
     :type res: array
@@ -733,7 +737,7 @@ def res(res, particle="", verbose=False):
     :type particle: str
     :parameter verbose: whether to print a, b and c for the fit.
     :type verbose: bool
-    '''
+    """
     plt.figure(figsize=(5, 5))
 
     n = len(res)
@@ -746,7 +750,7 @@ def res(res, particle="", verbose=False):
         energy = (i * iSize + (i + 1) * iSize) / 2
         energies.append(energy)
 
-        plt.scatter(energy, res[i], color='blue', alpha=0.5
+        plt.scatter(energy, res[i], color=col, alpha=0.5
                     # , label='%d to %d GeV' % (i * iSize, (i + 1) * iSize)
                     )
 
@@ -789,7 +793,8 @@ def res(res, particle="", verbose=False):
 
 def plotBins(nbins, true, pred, particle=""):
     '''
-    Distribute the data to bins and plots the means, relative means, standard deviations, relative standard deviations and the energy resolution.
+    Distribute the data to bins and plots the means, relative means, standard deviations,
+     relative standard deviations and the energy resolution.
     The energies are divided into n bins of the same size.
     :parameter nbins: number of bins.
     :type nbins: int
@@ -803,7 +808,7 @@ def plotBins(nbins, true, pred, particle=""):
     rMeans(rMeans_ar, stds_ar, sizes_ar, particle=particle)
     stds(stds_ar, particle=particle)
     rStds(rStds_ar, particle=particle)
-    res(res_ar, particle=particle)
+    #res(res_ar, particle=particle)
     res(rStds_ar, particle=particle)
 
 
@@ -918,8 +923,9 @@ def true_sum_from_HDF5(file_name):
 
 
 def SumPredTrue(target, pred, inSum, particle=""):
-    '''
-    Plots in the same plot the distribution of the sum of energies against the true energy, and the linear fit of the predicted energy against the true energy.
+    """
+    Plots in the same plot the distribution of the sum of energies against the true energy,
+     and the linear fit of the predicted energy against the true energy.
     :parameter target: array of energy targets (true value label).
     :type target: numpy.ndarray
     :parameter pred: array of predictions from testing.
@@ -928,7 +934,7 @@ def SumPredTrue(target, pred, inSum, particle=""):
     :type inSum: numpy.ndarray
     :parameter particle: name of the particle
     :type particle: str
-    '''
+    """
     plt.figure(figsize=(5, 5))
     plt.xlabel("True energy (GeV)")
     plt.ylabel("Predicted energy (GeV)")
@@ -948,3 +954,508 @@ def SumPredTrue(target, pred, inSum, particle=""):
     plt.legend()
     plt.colorbar()
     plt.show()
+
+
+def plotTruePreds(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0):
+    """
+    Plots 3 True X Pred energy plots, one for each kind of particle
+    :parameter tr_gamma: array containing the true values of the energy for photons.
+    :parameter pred_gamma: array containing the predicted energies for photons.
+    :parameter tr_ele: array containing the true values of the energy for electrons.
+    :parameter pred_ele: array containing the predicted energies for electrons.
+    :parameter tr_pi0: array containing the true values of the energy for neutral pions.
+    :parameter pred_pi0: array containing the predicted energies for neutral pions.
+    """
+    # Three subplots sharing both x/y axes
+    f, (ax1, ax2, ax3) = plt.subplots(3, sharex=True, sharey=True)
+    #f.set_title('Predicted energy X True energy')
+    #f.suptitle('Predicted energy X True energy')
+
+    ax1.scatter(tr_gamma, pred_gamma)
+    ax1.set_title('Photons')
+    ax2.scatter(tr_ele, pred_ele)
+    ax2.set_title('Electrons')
+    ax3.scatter(tr_pi0, pred_pi0)
+    ax3.set_title('Neutral pions')
+
+    # Fine-tune figure; make subplots close to each other and hide x ticks for
+    # all but bottom plot.
+    f.subplots_adjust(hspace=0)
+    plt.setp([a.get_xticklabels() for a in f.axes[:-1]], visible=False)
+
+    plt.title("Predicted energy X True energy")
+    plt.xlabel("True energy (GeV)")
+    plt.ylabel("Predicted energy (GeV)")
+
+    plt.show()
+
+
+def stats_particle(difference):
+    """"
+    Returns the relevant statistics metrics about the distribution of the reative energy difference, as the mean,
+     standard deviation, standard error and an appropriate label.
+    :parameter difference: array containing the difference between true energy and the predicted energy for a particle.
+    :type difference: numpy.ndarray
+    :return: mean, std, error and label
+    :rtype: float, float, float, str.
+    """
+    mean = np.mean(difference)
+    std = np.std(difference)
+    error = std / np.sqrt(len(difference))
+    label_part = 'Mean: %.3f $\pm$ %.3f \nStd. dev.: %.2f' % (mean, error, std)
+    return mean, std, error, label_part
+
+
+def hists(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0, nbins=550):
+    """
+    Plots 3 relative energy histograms, one for each kind of particle
+    :parameter tr_gamma: array containing the true values of the energy for photons.
+    :parameter pred_gamma: array containing the predicted energies for photons.
+    :parameter tr_ele: array containing the true values of the energy for electrons.
+    :parameter pred_ele: array containing the predicted energies for electrons.
+    :parameter tr_pi0: array containing the true values of the energy for neutral pions.
+    :parameter pred_pi0: array containing the predicted energies for neutral pions.
+    :parameter nbins: number of bins for the histograms.
+    """
+    # to implement: *kwargs
+    # give multiple arrays in the input and use them correctly iteratively (?)
+
+    # subplots
+    f, (ax1, ax2, ax3) = plt.subplots(3, sharex=True, sharey=True)
+
+    # relative differences for different particles
+    difference_gamma = rDif(tr_gamma, pred_gamma)
+    difference_ele = rDif(tr_ele, pred_ele)
+    difference_pi0 = rDif(tr_pi0, pred_pi0)
+
+    # relevant stats
+    mean_gamma, std_gamma, error_gamma, label_gamma = stats_particle(difference_gamma)
+    mean_ele, std_ele, error_ele, label_ele = stats_particle(difference_ele)
+    mean_pi0, std_pi0, error_pi0, label_pi0 = stats_particle(difference_pi0)
+
+    ax1.hist(difference_gamma, nbins, normed=1, facecolor='green', alpha=0.75, label=label_gamma)
+    ax2.hist(difference_ele, nbins, normed=1, facecolor='red', alpha=0.75, label=label_ele)
+    ax3.hist(difference_pi0, nbins, normed=1, facecolor='blue', alpha=0.75, label=label_pi0)
+
+    plt.xlim(-500, 500)
+    plt.xlabel(r'$\frac{(E_{true} - E_{pred})}{E_{true}}$ (%)', size=18)
+    plt.ylabel('Probability', size=16)
+    plt.title("Relative energy difference", size=18)
+    plt.legend()
+
+    plt.show()
+    # plt.savefig("hists%d_%d.jpg" % (lim_l, lim_r))
+
+
+def multiMeans(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0, nbins=10):
+    """
+    Plots the energy bins means of different particles together, each one having a different color.
+    :type tr_gamma: numpy.ndarray
+    :parameter tr_gamma: array containing the true values of the energy for photons.
+    :type pred_gamma: numpy.ndarray
+    :parameter pred_gamma: array containing the predicted energies for photons.
+    :type tr_ele: numpy.ndarray
+    :parameter tr_ele: array containing the true values of the energy for electrons.
+    :type pred_ele: numpy.ndarray
+    :parameter pred_ele: array containing the predicted energies for electrons.
+    :type tr_pi0: numpy.ndarray
+    :parameter tr_pi0: array containing the true values of the energy for neutral pions.
+    :type pred_pi0: numpy-ndarray.
+    :parameter pred_pi0: array containing the predicted energies for neutral pions.
+    :type nbins: int
+    :parameter nbins: number of bins of energy.
+    """
+    x_gamma, y_gamma, means_gamma, rMeans_gamma, stds_gamma, rStds_gamma, sizes_gamma, res_gamma = binning(
+        nbins, tr_gamma, pred_gamma)
+    x_ele, y_ele, means_ele, rMeans_ele, stds_ele, rStds_ele, sizes_ele, res_ele = binning(nbins, tr_ele, pred_ele)
+    x_pi0, y_pi0, means_pi0, rMeans_pi0, stds_pi0, rStds_pi0, sizes_pi0, res_pi0 = binning(nbins, tr_pi0, pred_pi0)
+
+    # subplots
+    f, (ax1, ax2, ax3) = plt.subplots(3, sharex=True, sharey=True)
+
+    plt.figure(figsize=(5, 5))
+
+    returnMeans(means_gamma, stds_gamma, sizes_gamma, ax1, col='blue', particle_name="Photons")
+    returnMeans(means_ele, stds_ele, sizes_ele, ax2, col='red', particle_name="Electrons")
+    returnMeans(means_pi0, stds_pi0, sizes_pi0, ax3, col='green', particle_name="Neutral pions")
+
+    plt.xlabel("Energy", size=16)
+    plt.ylabel("$\mu(\Delta E)$ (GeV)", size=19)
+    plt.title("Means", size=16)
+    plt.xlim(0, 500)
+    plt.legend(loc='best'
+               #, bbox_to_anchor=(1.52, 0.9)
+               )
+    plt.show()
+    # plt.savefig("means_particles.jpg")
+
+
+def returnMeans(means_particle, stds_particle, sizes_particle, ax, col='blue', particle_name=""):
+    """
+    Helper for multiMeans(). Plots the energy bin means for individual particles in subplots.
+    :parameter means_particle: array containing the means of the energy bins for a particle.
+    :type means_particle: numpy.ndarray
+    :parameter stds_particle: array containing the standard deviations of the energy bins for a particle.
+    :type stds_particle: numpy.ndarray
+    :parameter sizes_particle: array containing the sizes of the energy bins for a particle.
+    :type sizes_particle: numpy.ndarray
+    :parameter ax: axis (subplot).
+    :type ax: matplotlib.axes._subplots.AxesSubplot
+    :parameter col: color of the distribution.
+    :type col: str
+    :parameter particle_name: name of the particle.
+    :type particle_name: str
+    """
+
+    n_particle = len(means_particle)
+    iSize_particle = 500 / n_particle
+
+    for i in range(0, n_particle):
+        x_axis = (i * iSize_particle + (i + 1) * iSize_particle) / 2
+        error = stds_particle[i] / np.sqrt(sizes_particle[i])
+        ax.scatter(x_axis, means_particle[i], color=col, alpha=0.5
+                   , label='%s' % particle_name
+                   )
+        ax.errorbar(x_axis, means_particle[i], yerr=error, color='black')
+
+
+def multiRMeans(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0, nbins=10):
+    """
+    Plots the energy bins means of different particles together, each one having a different color.
+    :type tr_gamma: numpy.ndarray
+    :parameter tr_gamma: array containing the true values of the energy for photons.
+    :type pred_gamma: numpy.ndarray
+    :parameter pred_gamma: array containing the predicted energies for photons.
+    :type tr_ele: numpy.ndarray
+    :parameter tr_ele: array containing the true values of the energy for electrons.
+    :type pred_ele: numpy.ndarray
+    :parameter pred_ele: array containing the predicted energies for electrons.
+    :type tr_pi0: numpy.ndarray
+    :parameter tr_pi0: array containing the true values of the energy for neutral pions.
+    :type pred_pi0: numpy-ndarray.
+    :parameter pred_pi0: array containing the predicted energies for neutral pions.
+    :type nbins: int
+    :parameter nbins: number of bins of energy.
+    """
+    x_gamma, y_gamma, means_gamma, rMeans_gamma, stds_gamma, rStds_gamma, sizes_gamma, res_gamma = binning(
+        nbins, tr_gamma, pred_gamma)
+    x_ele, y_ele, means_ele, rMeans_ele, stds_ele, rStds_ele, sizes_ele, res_ele = binning(nbins, tr_ele, pred_ele)
+    x_pi0, y_pi0, means_pi0, rMeans_pi0, stds_pi0, rStds_pi0, sizes_pi0, res_pi0 = binning(nbins, tr_pi0, pred_pi0)
+
+    # subplots
+    f, (ax1, ax2, ax3) = plt.subplots(3, sharex=True, sharey=True)
+
+    plt.figure(figsize=(5, 5))
+
+    returnMeans(rMeans_gamma, stds_gamma, sizes_gamma, ax1, col='blue', particle_name="Photons")
+    returnMeans(rMeans_ele, stds_ele, sizes_ele, ax2, col='red', particle_name="Electrons")
+    returnMeans(rMeans_pi0, stds_pi0, sizes_pi0, ax3, col='green', particle_name="Neutral pions")
+
+    plt.xlabel("Energy", size=16)
+    plt.ylabel(r"$\mu(\frac{\Delta E}{E_{true}})$ (%)", size=19)
+    plt.title("Relative means", size=19)
+    plt.xlim(0, 500)
+    plt.legend(loc='best'
+               #, bbox_to_anchor=(1.52, 0.9)
+               )
+    plt.show()
+    # plt.savefig("means_particles.jpg")
+
+
+def returnStds(stds_particle, ax, col='red', particle_name=""):
+    """
+    Helper for multiStds(). Plots the energy bin standard deviations for individual particles in subplots.
+    :parameter stds_particle: array containing the standard deviations of the energy bins for a particle.
+    :type stds_particle: numpy.ndarray
+    :parameter ax: axis (subplot).
+    :type ax: matplotlib.axes._subplots.AxesSubplot
+    :parameter col: color of the distribution.
+    :type col: str
+    """
+
+    n = len(stds)
+    iSize = 500 / n
+
+    plt.figure(figsize=(5, 5))
+
+    for i in range(0, n):
+        energy = (i * iSize + (i + 1) * iSize) / 2
+        ax.scatter(energy, stds_particle[i], color=col, alpha=0.5, label='%s' % particle_name)
+
+
+def multiStds(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0, nbins=10):
+    """
+    Plots energy bins standard deviations of different particles together, each one having a different color.
+    Without fit.
+    :type tr_gamma: numpy.ndarray
+    :parameter tr_gamma: array containing the true values of the energy for photons.
+    :type pred_gamma: numpy.ndarray
+    :parameter pred_gamma: array containing the predicted energies for photons.
+    :type tr_ele: numpy.ndarray
+    :parameter tr_ele: array containing the true values of the energy for electrons.
+    :type pred_ele: numpy.ndarray
+    :parameter pred_ele: array containing the predicted energies for electrons.
+    :type tr_pi0: numpy.ndarray
+    :parameter tr_pi0: array containing the true values of the energy for neutral pions.
+    :type pred_pi0: numpy-ndarray.
+    :parameter pred_pi0: array containing the predicted energies for neutral pions.
+    :type nbins: int
+    :parameter nbins: number of bins of energy.
+    """
+    x_gamma, y_gamma, means_gamma, rMeans_gamma, stds_gamma, rStds_gamma, sizes_gamma, res_gamma = binning(
+        nbins, tr_gamma, pred_gamma)
+    x_ele, y_ele, means_ele, rMeans_ele, stds_ele, rStds_ele, sizes_ele, res_ele = binning(nbins, tr_ele, pred_ele)
+    x_pi0, y_pi0, means_pi0, rMeans_pi0, stds_pi0, rStds_pi0, sizes_pi0, res_pi0 = binning(nbins, tr_pi0, pred_pi0)
+
+    # subplots
+    f, (ax1, ax2, ax3) = plt.subplots(3, sharex=True, sharey=True)
+
+    plt.figure(figsize=(5, 5))
+
+    returnStds(stds_gamma, ax1, col='blue', particle_name= "Photons")
+    returnStds(stds_ele, ax2, col='red', particle_name="Electrons")
+    returnStds(stds_pi0, ax3, col='green', particle_name="Neutral pions")
+
+    plt.xlabel("Energy", size=16)
+    plt.ylabel("$\sigma(\Delta E)$ (GeV)", size=19)
+    plt.title("Standard deviations", size=19)
+    plt.xlim(0, 500)
+    plt.legend(loc='best'
+               #, bbox_to_anchor=(1.52, 0.9)
+               )
+    plt.show()
+    # plt.savefig("stds_particles.jpg")
+
+
+def returnRStds(stds_particle, ax, col='red', particle_name="", verbose=False):
+    """
+    Helper for multiRStds(). Plots the energy bin relative standard deviations for individual particles in subplots.
+    Plots resolution fit as well.
+    :parameter stds_particle: array containing the standard deviations of the energy bins for a particle.
+    :type stds_particle: numpy.ndarray
+    :parameter ax: axis (subplot).
+    :type ax: matplotlib.axes._subplots.AxesSubplot
+    :parameter col: color of the distribution.
+    :type col: str
+    :parameter verbose: whether to print a, b and c for the fit.
+    :type verbose: bool
+    """
+
+    n = len(stds)
+    iSize = 500 / n
+
+    plt.figure(figsize=(5, 5))
+
+    energies = []
+
+    for i in range(0, n):
+        energy = (i * iSize + (i + 1) * iSize) / 2
+        energies.append(energy)
+        ax.scatter(energy, stds_particle[i], color=col, alpha=0.5, label='%s' % particle_name)
+
+    ####### fit #######
+    plt.rcParams['agg.path.chunksize'] = 10000
+
+    def func(E, a, b, c):
+        # equation to be fit in the data
+        return a / np.sqrt(E) + b + c / E
+
+    popt, pcov = curve_fit(func, energies, res)
+    if (verbose == True):
+        print(popt)
+        # print(pcov)
+
+    y = func(energies, *popt)
+
+    fit = r'$\frac{\sigma(\Delta E)}{E_{t}} = \frac{%.2e}{\sqrt{E_{t}}} + %.2e + \frac{%.2e}{E_{t}}$' % (
+        popt[0], popt[1], popt[2])
+
+    ax.plot(energies, y, 'r', label=fit)
+    ############
+
+
+def multiRStds(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0, nbins=10, verbose=False):
+    """
+    Plots energy bins relative standard deviations of different particles together, each one having a different color.
+    :type tr_gamma: numpy.ndarray
+    :parameter tr_gamma: array containing the true values of the energy for photons.
+    :type pred_gamma: numpy.ndarray
+    :parameter pred_gamma: array containing the predicted energies for photons.
+    :type tr_ele: numpy.ndarray
+    :parameter tr_ele: array containing the true values of the energy for electrons.
+    :type pred_ele: numpy.ndarray
+    :parameter pred_ele: array containing the predicted energies for electrons.
+    :type tr_pi0: numpy.ndarray
+    :parameter tr_pi0: array containing the true values of the energy for neutral pions.
+    :type pred_pi0: numpy-ndarray.
+    :parameter pred_pi0: array containing the predicted energies for neutral pions.
+    :type nbins: int
+    :parameter nbins: number of bins of energy.
+    :parameter verbose: whether to print a, b and c for the fit.
+    :type verbose: bool
+    """
+    x_gamma, y_gamma, means_gamma, rMeans_gamma, stds_gamma, rStds_gamma, sizes_gamma, res_gamma = binning(
+        nbins, tr_gamma, pred_gamma)
+    x_ele, y_ele, means_ele, rMeans_ele, stds_ele, rStds_ele, sizes_ele, res_ele = binning(nbins, tr_ele, pred_ele)
+    x_pi0, y_pi0, means_pi0, rMeans_pi0, stds_pi0, rStds_pi0, sizes_pi0, res_pi0 = binning(nbins, tr_pi0, pred_pi0)
+
+    # subplots
+    f, (ax1, ax2, ax3) = plt.subplots(3, sharex=True, sharey=True)
+
+    plt.figure(figsize=(5, 5))
+
+    returnRStds(rStds_gamma, ax1, col='blue', particle_name= "Photons")
+    returnRStds(rStds_ele, ax2, col='red', particle_name="Electrons")
+    returnRStds(rStds_pi0, ax3, col='green', particle_name="Neutral pions")
+
+    plt.xlabel("Energy", size=16)
+    plt.ylabel(r"$\sigma(\frac{\Delta E}{E_{true}})$ (%)", size=19)
+    plt.title("Relative standard deviations", size=19)
+    plt.xlim(0, 500)
+    plt.legend(loc='best'
+               #, bbox_to_anchor=(1.52, 0.9)
+               )
+    plt.show()
+    # plt.savefig("stds_particles.jpg")
+
+
+def multi_bins_all(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0):
+    """
+    Makes the binning every time a different analysis is called.
+    Use simple_bins() for binning only once.
+    Plots multiple analysis for the energy bins, plotting multiple particles together.
+    :type tr_gamma: numpy.ndarray
+    :parameter tr_gamma: array containing the true values of the energy for photons.
+    :type pred_gamma: numpy.ndarray
+    :parameter pred_gamma: array containing the predicted energies for photons.
+    :type tr_ele: numpy.ndarray
+    :parameter tr_ele: array containing the true values of the energy for electrons.
+    :type pred_ele: numpy.ndarray
+    :parameter pred_ele: array containing the predicted energies for electrons.
+    :type tr_pi0: numpy.ndarray
+    :parameter tr_pi0: array containing the true values of the energy for neutral pions.
+    :type pred_pi0: numpy-ndarray.
+    :parameter pred_pi0: array containing the predicted energies for neutral pions.
+    """
+    multiMeans(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0)
+    multiRMeans(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0)
+    multiStds(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0)
+    multiRStds(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0)
+
+
+def simple_bins(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0, nbins=10):
+    """
+    Makes the binning only once..
+    Plots multiple analysis for the energy bins, plotting multiple particles together.
+    :type tr_gamma: numpy.ndarray
+    :parameter tr_gamma: array containing the true values of the energy for photons.
+    :type pred_gamma: numpy.ndarray
+    :parameter pred_gamma: array containing the predicted energies for photons.
+    :type tr_ele: numpy.ndarray
+    :parameter tr_ele: array containing the true values of the energy for electrons.
+    :type pred_ele: numpy.ndarray
+    :parameter pred_ele: array containing the predicted energies for electrons.
+    :type tr_pi0: numpy.ndarray
+    :parameter tr_pi0: array containing the true values of the energy for neutral pions.
+    :type pred_pi0: numpy-ndarray.
+    :parameter pred_pi0: array containing the predicted energies for neutral pions.
+    :type nbins: int
+    :parameter nbins: number of bins of energy.
+    """
+    x_gamma, y_gamma, means_gamma, rMeans_gamma, stds_gamma, rStds_gamma, sizes_gamma, res_gamma = binning(
+        nbins, tr_gamma, pred_gamma)
+    x_ele, y_ele, means_ele, rMeans_ele, stds_ele, rStds_ele, sizes_ele, res_ele = binning(nbins, tr_ele, pred_ele)
+    x_pi0, y_pi0, means_pi0, rMeans_pi0, stds_pi0, rStds_pi0, sizes_pi0, res_pi0 = binning(nbins, tr_pi0, pred_pi0)
+
+    simple_means(means_gamma, means_ele, means_pi0, stds_gamma, stds_ele, stds_pi0, sizes_gamma, sizes_ele, sizes_pi0)
+    simple_rel_means(rMeans_gamma, rMeans_ele, rMeans_pi0, stds_gamma, stds_ele, stds_pi0, sizes_gamma, sizes_ele, sizes_pi0)
+    # /\ use rStds instead of stds (?)
+    simple_stds(stds_gamma, stds_ele, stds_pi0)
+    simple_rel_stds(rStds_gamma, rStds_ele, rStds_pi0)
+
+
+def simple_means(means_gamma, means_ele, means_pi0, stds_gamma, stds_ele, stds_pi0, sizes_gamma, sizes_ele, sizes_pi0):
+    # subplots
+    f, (ax1, ax2, ax3) = plt.subplots(3, sharex=True, sharey=True)
+
+    plt.figure(figsize=(5, 5))
+
+    returnMeans(means_gamma, stds_gamma, sizes_gamma, ax1, col='blue', particle_name="Photons")
+    returnMeans(means_ele, stds_ele, sizes_ele, ax2, col='red', particle_name="Electrons")
+    returnMeans(means_pi0, stds_pi0, sizes_pi0, ax3, col='green', particle_name="Neutral pions")
+
+    plt.xlabel("Energy", size=16)
+    plt.ylabel("$\mu(\Delta E)$ (GeV)", size=19)
+    plt.title("Means", size=16)
+    plt.xlim(0, 500)
+    plt.legend(loc='best'
+               # , bbox_to_anchor=(1.52, 0.9)
+               )
+    plt.show()
+    # plt.savefig("means_particles.jpg")
+
+
+def simple_rel_means(rMeans_gamma, rMeans_ele, rMeans_pi0, stds_gamma, stds_ele, stds_pi0, sizes_gamma, sizes_ele, sizes_pi0):
+    # subplots
+    f, (ax1, ax2, ax3) = plt.subplots(3, sharex=True, sharey=True)
+
+    plt.figure(figsize=(5, 5))
+
+    returnMeans(rMeans_gamma, stds_gamma, sizes_gamma, ax1, col='blue', particle_name="Photons")
+    returnMeans(rMeans_ele, stds_ele, sizes_ele, ax2, col='red', particle_name="Electrons")
+    returnMeans(rMeans_pi0, stds_pi0, sizes_pi0, ax3, col='green', particle_name="Neutral pions")
+
+    plt.xlabel("Energy", size=16)
+    plt.ylabel(r"$\mu(\frac{\Delta E}{E_{true}})$ (%)", size=19)
+    plt.title("Relative means", size=19)
+    plt.xlim(0, 500)
+    plt.legend(loc='best'
+               # , bbox_to_anchor=(1.52, 0.9)
+               )
+    plt.show()
+    # plt.savefig("means_particles.jpg")
+
+
+def simple_stds(stds_gamma, stds_ele, stds_pi0):
+    # subplots
+    f, (ax1, ax2, ax3) = plt.subplots(3, sharex=True, sharey=True)
+
+    plt.figure(figsize=(5, 5))
+
+    returnStds(stds_gamma, ax1, col='blue', particle_name="Photons")
+    returnStds(stds_ele, ax2, col='red', particle_name="Electrons")
+    returnStds(stds_pi0, ax3, col='green', particle_name="Neutral pions")
+
+    plt.xlabel("Energy", size=16)
+    plt.ylabel("$\sigma(\Delta E)$ (GeV)", size=19)
+    plt.title("Standard deviations", size=19)
+    plt.xlim(0, 500)
+    plt.legend(loc='best'
+               # , bbox_to_anchor=(1.52, 0.9)
+               )
+    plt.show()
+    # plt.savefig("stds_particles.jpg")
+
+
+def simple_rel_stds(rStds_gamma, rStds_ele, rStds_pi0):
+    # subplots
+    f, (ax1, ax2, ax3) = plt.subplots(3, sharex=True, sharey=True)
+
+    plt.figure(figsize=(5, 5))
+
+    returnRStds(rStds_gamma, ax1, col='blue', particle_name="Photons")
+    returnRStds(rStds_ele, ax2, col='red', particle_name="Electrons")
+    returnRStds(rStds_pi0, ax3, col='green', particle_name="Neutral pions")
+
+    plt.xlabel("Energy", size=16)
+    plt.ylabel(r"$\sigma(\frac{\Delta E}{E_{true}})$ (%)", size=19)
+    plt.title("Relative standard deviations", size=19)
+    plt.xlim(0, 500)
+    plt.legend(loc='best'
+               # , bbox_to_anchor=(1.52, 0.9)
+               )
+    plt.show()
+    # plt.savefig("stds_particles.jpg")
+
+
+
