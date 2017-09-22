@@ -1016,7 +1016,7 @@ def stats_particle(difference):
 
 def hists(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0, tr_chPi, pred_chPi, nbins=550):
     """
-    Plots 4 relative energy histograms, one for each kind of particle
+    Plots 4 relative energy histograms, one for each kind of particle.
     :parameter tr_gamma: array containing the true values of the energy for photons.
     :parameter pred_gamma: array containing the predicted energies for photons.
     :parameter tr_ele: array containing the true values of the energy for electrons.
@@ -1046,16 +1046,19 @@ def hists(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0, tr_chPi, pre
     mean_pi0, std_pi0, error_pi0, label_pi0 = stats_particle(difference_pi0)
     mean_chPi, std_chPi, error_chPi, label_chPi = stats_particle(difference_chPi)
 
+    # defining axes
     ax1 = axes2d[0, 0]
     ax2 = axes2d[0, 1]
     ax3 = axes2d[1, 0]
     ax4 = axes2d[1, 1]
 
+    # plotting histograms
     ax1.hist(difference_gamma, nbins, normed=1, facecolor='green', alpha=0.75, label=label_gamma)
     ax2.hist(difference_ele, nbins, normed=1, facecolor='red', alpha=0.75, label=label_ele)
     ax3.hist(difference_pi0, nbins, normed=1, facecolor='blue', alpha=0.75, label=label_pi0)
     ax4.hist(difference_chPi, nbins, normed=1, facecolor='orange', alpha=0.75, label=label_chPi)
 
+    # setting titles and legends
     ax1.set_title('Photons')
     ax2.set_title('Electrons')
     ax3.set_title('Neutral pions')
@@ -1073,11 +1076,55 @@ def hists(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0, tr_chPi, pre
 
     plt.xlim(-20, 20)
 
-    f.text(0.5, 0, r'$\frac{(E_{true} - E_{pred})}{E_{true}}$ (%)', ha='center', va='center', fontsize=14)
-    f.text(0, 0.5, 'Probability', ha='center', va='center', rotation='vertical', fontsize=16)
+    f.text(0.5, 0, r'$\frac{(E_{true} - E_{pred})}{E_{true}}$ (%)', ha='center', va='center', fontsize=16)
+    f.text(0, 0.5, 'Probability', ha='center', va='center', rotation='vertical', fontsize=14)
 
     plt.show()
     # plt.savefig("hists%d_%d.jpg" % (lim_l, lim_r))
+
+
+def out_hists(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0, tr_chPi, pred_chPi, nbins=550):
+    """
+    Plots outline histograms of 4 particles.
+    :parameter tr_gamma: array containing the true values of the energy for photons.
+    :parameter pred_gamma: array containing the predicted energies for photons.
+    :parameter tr_ele: array containing the true values of the energy for electrons.
+    :parameter pred_ele: array containing the predicted energies for electrons.
+    :parameter tr_pi0: array containing the true values of the energy for neutral pions.
+    :parameter pred_pi0: array containing the predicted energies for neutral pions.
+    :parameter tr_chPi: array containing the true values of the energy for charged pions.
+    :parameter pred_chPi: array containing the predicted energies for charged pions.
+    :parameter nbins: number of bins for the histograms.
+    """
+
+    # relative differences for different particles
+    difference_gamma = rDif(tr_gamma, pred_gamma)
+    difference_ele = rDif(tr_ele, pred_ele)
+    difference_pi0 = rDif(tr_pi0, pred_pi0)
+    difference_chPi = rDif(tr_chPi, pred_chPi)
+
+    # relevant stats
+    mean_gamma, std_gamma, error_gamma, label_gamma = stats_particle(difference_gamma)
+    mean_ele, std_ele, error_ele, label_ele = stats_particle(difference_ele)
+    mean_pi0, std_pi0, error_pi0, label_pi0 = stats_particle(difference_pi0)
+    mean_chPi, std_chPi, error_chPi, label_chPi = stats_particle(difference_chPi)
+
+    # plotting histograms
+    plt.hist(difference_gamma, nbins, normed=1, edgecolor='green', linewidth=1.5, facecolor='white', alpha=0.3,
+             label="Photons\n" + label_gamma)
+    plt.hist(difference_ele, nbins, normed=1, edgecolor='red', linewidth=1.5, facecolor='white', alpha=0.3,
+             label="Electrons\n" + label_ele)
+    plt.hist(difference_pi0, nbins, normed=1, edgecolor='blue', linewidth=1.5, facecolor='white', alpha=0.3,
+             label="Neutral Pions\n" + label_pi0)
+    plt.hist(difference_chPi, nbins, normed=1, edgecolor='orange', linewidth=1.5, facecolor='white', alpha=0.3,
+             label="Charged Pions\n" + label_chPi)
+
+    plt.xlim(-20, 20)
+    plt.legend()
+    plt.xlabel(r'$\frac{(E_{true} - E_{pred})}{E_{true}}$ (%)', size=16)
+    plt.ylabel("Probability", size=14)
+
+    plt.show()
 
 
 #########################
