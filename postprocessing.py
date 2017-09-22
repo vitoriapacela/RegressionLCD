@@ -956,7 +956,7 @@ def SumPredTrue(target, pred, inSum, particle=""):
     plt.show()
 
 
-def plotTruePreds(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0):
+def plotTruePreds(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0, tr_chPi, pred_chPi):
     """
     Plots 3 True X Pred energy plots, one for each kind of particle
     :parameter tr_gamma: array containing the true values of the energy for photons.
@@ -965,29 +965,43 @@ def plotTruePreds(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0):
     :parameter pred_ele: array containing the predicted energies for electrons.
     :parameter tr_pi0: array containing the true values of the energy for neutral pions.
     :parameter pred_pi0: array containing the predicted energies for neutral pions.
+    :parameter tr_chPi: array containing the true values of the energy for charged pions.
+    :parameter pred_chPi: array containing the predicted energies for charged pions.
     """
-    # Three subplots sharing both x/y axes
-    f, (ax1, ax2, ax3) = plt.subplots(3, sharex=True, sharey=True)
-    #f.set_title('Predicted energy X True energy')
-    #f.suptitle('Predicted energy X True energy')
+    # 4 subplots sharing both x/y axes
+    f, axes2d = plt.subplots(nrows=2, ncols=2, sharex=True, sharey=True, figsize=(5, 5))
+    # f.suptitle('Predicted energy X True energy', fontsize=14)
 
-    ax1.scatter(tr_gamma, pred_gamma)
+    ax1 = axes2d[0, 0]
+    ax2 = axes2d[0, 1]
+    ax3 = axes2d[1, 0]
+    ax4 = axes2d[1, 1]
+
+    ax1.hist2d(tr_gamma, pred_gamma, bins=200, norm=LogNorm(), cmap="cool")
     ax1.set_title('Photons')
-    ax2.scatter(tr_ele, pred_ele)
+    ax2.hist2d(tr_ele, pred_ele, bins=200, norm=LogNorm(), cmap="cool")
     ax2.set_title('Electrons')
-    ax3.scatter(tr_pi0, pred_pi0)
+    ax3.hist2d(tr_pi0, pred_pi0, bins=200, norm=LogNorm(), cmap="cool")
     ax3.set_title('Neutral pions')
+    ax4.hist2d(tr_chPi, pred_chPi, bins=200, norm=LogNorm(), cmap="cool")
+    ax4.set_title('Charged pions')
 
-    # Fine-tune figure; make subplots close to each other and hide x ticks for
-    # all but bottom plot.
-    f.subplots_adjust(hspace=0)
-    plt.setp([a.get_xticklabels() for a in f.axes[:-1]], visible=False)
+    plt.xticks(np.arange(0, 600, 100.0))
+    plt.yticks(np.arange(0, 600, 100.0))
+    # tick.label.set_fontsize(14)
 
-    plt.title("Predicted energy X True energy")
-    plt.xlabel("True energy (GeV)")
-    plt.ylabel("Predicted energy (GeV)")
+    # axes2d.set_xlabel("True energy (GeV)", fontsize=14)
+    # axes2d.set_ylabel("Predicted energy (GeV)", fontsize=14)
+    f.text(0.5, 0, "True energy (GeV)", ha='center', va='center', fontsize=14)
+    f.text(0, 0.5, "Predicted energy (GeV)", ha='center', va='center', rotation='vertical', fontsize=14)
 
     plt.show()
+
+
+#########################
+#EVERYTHING FROM HERE HASN'T BEEN TESTED
+#Has bugs
+#########################
 
 
 def stats_particle(difference):
