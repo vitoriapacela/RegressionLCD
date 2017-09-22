@@ -998,12 +998,6 @@ def plotTruePreds(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0, tr_c
     plt.show()
 
 
-#########################
-#EVERYTHING FROM HERE HASN'T BEEN TESTED
-#Has bugs
-#########################
-
-
 def stats_particle(difference):
     """"
     Returns the relevant statistics metrics about the distribution of the reative energy difference, as the mean,
@@ -1020,46 +1014,76 @@ def stats_particle(difference):
     return mean, std, error, label_part
 
 
-def hists(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0, nbins=550):
+def hists(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0, tr_chPi, pred_chPi, nbins=550):
     """
-    Plots 3 relative energy histograms, one for each kind of particle
+    Plots 4 relative energy histograms, one for each kind of particle
     :parameter tr_gamma: array containing the true values of the energy for photons.
     :parameter pred_gamma: array containing the predicted energies for photons.
     :parameter tr_ele: array containing the true values of the energy for electrons.
     :parameter pred_ele: array containing the predicted energies for electrons.
     :parameter tr_pi0: array containing the true values of the energy for neutral pions.
     :parameter pred_pi0: array containing the predicted energies for neutral pions.
+    :parameter tr_chPi: array containing the true values of the energy for charged pions.
+    :parameter pred_chPi: array containing the predicted energies for charged pions.
     :parameter nbins: number of bins for the histograms.
     """
     # to implement: *kwargs
     # give multiple arrays in the input and use them correctly iteratively (?)
 
-    # subplots
-    f, (ax1, ax2, ax3) = plt.subplots(3, sharex=True, sharey=True)
+    # 4 subplots sharing both x and y axes
+    f, axes2d = plt.subplots(nrows=2, ncols=2, sharex=True, sharey=True, figsize=(5, 5))
+    #f.suptitle('Relative energy difference', fontsize=16)
 
     # relative differences for different particles
     difference_gamma = rDif(tr_gamma, pred_gamma)
     difference_ele = rDif(tr_ele, pred_ele)
     difference_pi0 = rDif(tr_pi0, pred_pi0)
+    difference_chPi = rDif(tr_chPi, pred_chPi)
 
     # relevant stats
     mean_gamma, std_gamma, error_gamma, label_gamma = stats_particle(difference_gamma)
     mean_ele, std_ele, error_ele, label_ele = stats_particle(difference_ele)
     mean_pi0, std_pi0, error_pi0, label_pi0 = stats_particle(difference_pi0)
+    mean_chPi, std_chPi, error_chPi, label_chPi = stats_particle(difference_chPi)
+
+    ax1 = axes2d[0, 0]
+    ax2 = axes2d[0, 1]
+    ax3 = axes2d[1, 0]
+    ax4 = axes2d[1, 1]
 
     ax1.hist(difference_gamma, nbins, normed=1, facecolor='green', alpha=0.75, label=label_gamma)
     ax2.hist(difference_ele, nbins, normed=1, facecolor='red', alpha=0.75, label=label_ele)
     ax3.hist(difference_pi0, nbins, normed=1, facecolor='blue', alpha=0.75, label=label_pi0)
+    ax4.hist(difference_chPi, nbins, normed=1, facecolor='orange', alpha=0.75, label=label_chPi)
 
-    plt.xlim(-500, 500)
-    plt.xlabel(r'$\frac{(E_{true} - E_{pred})}{E_{true}}$ (%)', size=18)
-    plt.ylabel('Probability', size=16)
-    plt.title("Relative energy difference", size=18)
-    plt.legend()
+    ax1.set_title('Photons')
+    ax2.set_title('Electrons')
+    ax3.set_title('Neutral pions')
+    ax4.set_title('Charged pions')
+
+    ax1.legend()
+    ax2.legend()
+    ax3.legend()
+    ax4.legend()
+
+    # ax1.set_xlim(-10, 10)
+    # ax2.set_xlim(-10, 10)
+    # ax3.set_xlim(-10, 10)
+    # ax4.set_xlim(-20, 20)
+
+    plt.xlim(-20, 20)
+
+    f.text(0.5, 0, r'$\frac{(E_{true} - E_{pred})}{E_{true}}$ (%)', ha='center', va='center', fontsize=14)
+    f.text(0, 0.5, 'Probability', ha='center', va='center', rotation='vertical', fontsize=16)
 
     plt.show()
     # plt.savefig("hists%d_%d.jpg" % (lim_l, lim_r))
 
+
+#########################
+#EVERYTHING FROM HERE HASN'T BEEN TESTED
+#Has bugs
+#########################
 
 def multiMeans(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0, nbins=10):
     """
