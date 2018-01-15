@@ -92,7 +92,6 @@ def defModel(loss='mse', name="regression"):
     input2 = Input(shape=(5, 5, 60))
     r = Reshape((5, 5, 60, 1))(input2)
     model2 = Convolution3D(10, 2, 2, 6, activation='relu')(r)
-    #model2 = Convolution3D(10, 2, 2, 6, activation='relu')(r)
     model2 = MaxPooling3D()(model2)
     model2 = Flatten()(model2)
 

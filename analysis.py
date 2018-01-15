@@ -625,7 +625,7 @@ def means(means, stds, sizes, particle ="", col='purple'):
                     )
         plt.errorbar(x_axis, means[i], yerr=error, color='black')
 
-    plt.xlabel("Energy", size=16)
+    plt.xlabel("Energy (GeV)", size=16)
     plt.ylabel("$\mu(\Delta E)$ (GeV)", size=19)
     plt.title("%s Means" % particle, size=16)
     plt.xlim(0, 500)
@@ -660,7 +660,7 @@ def rMeans(rMeans, stds, sizes, particle ="", col='pink'):
                     )
         plt.errorbar(energy, rMeans[i], yerr=error, color='purple')
 
-    plt.xlabel("Energy", size=16)
+    plt.xlabel("Energy (GeV)", size=16)
     plt.ylabel(r"$\mu(\frac{\Delta E}{E_{true}})$ (%)", size=19)
     plt.title("%s Relative means" % particle, size=16)
     plt.xlim(0, 500)
@@ -690,7 +690,7 @@ def stds(stds, particle ="", col='blue'):
                     # , label='%d to %d GeV' % (i * iSize, (i + 1) * iSize)
                     )
 
-    plt.xlabel("Energy", size=16)
+    plt.xlabel("Energy (GeV)", size=16)
     plt.ylabel("$\sigma(\Delta E)$ (GeV)", size=19)
     plt.title("%s Standard deviations" % particle, size=16)
     plt.xlim(0, 500)
@@ -719,7 +719,7 @@ def rStds(rStds, particle="", col='orange'):
                     # , label='%d to %d GeV' % (i * iSize, (i + 1) * iSize)
                     )
 
-    plt.xlabel("Energy", size=16)
+    plt.xlabel("Energy (GeV)", size=16)
     plt.ylabel(r"$\sigma(\frac{\Delta E}{E_{true}})$ (%)", size=19)
     plt.title("%s Relative standard deviations" % particle, size=16)
     plt.xlim(0, 500)
@@ -782,7 +782,7 @@ def res(res, particle="", verbose=False, col='blue'):
     # plt.plot(new_x, new_y, 'r', label=fit)
     #########################################################
 
-    plt.xlabel("Energy", size=16)
+    plt.xlabel("Energy (GeV)", size=16)
     plt.ylabel(r"$\frac{\sigma({\Delta E})}{E_{true}}$ (GeV)", size=19)
     plt.title("%s Energy resolution" % particle, size=16)
     plt.xlim(0, 500)
@@ -922,6 +922,19 @@ def true_sum_from_HDF5(file_name):
     return true, inSum
 
 
+def losses_from_HDF5(file_name):
+    '''
+    Loads loss and validation loss arrays from HDF5 file.
+    :parameter file_name: name of the HDF5 file containing true and pred arrays.
+    :type file_name: str
+    :return: true and pred arrays.
+    :rtype: numpy.ndarray, numpy.ndarray
+    '''
+    f = h5py.File(file_name + ".h5", 'r')
+    loss, val_loss = f["loss"][0], f["val_loss"][1]
+    return loss, val_loss
+
+
 def SumPredTrue(target, pred, inSum, particle=""):
     """
     Plots in the same plot the distribution of the sum of energies against the true energy,
@@ -958,7 +971,7 @@ def SumPredTrue(target, pred, inSum, particle=""):
 
 def plotTruePreds(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0, tr_chPi, pred_chPi):
     """
-    Plots 3 True X Pred energy plots, one for each kind of particle
+    Plots 4 True X Pred energy plots, one for each kind of particle
     :parameter tr_gamma: array containing the true values of the energy for photons.
     :parameter pred_gamma: array containing the predicted energies for photons.
     :parameter tr_ele: array containing the true values of the energy for electrons.
@@ -995,7 +1008,69 @@ def plotTruePreds(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0, tr_c
     f.text(0.5, 0, "True energy (GeV)", ha='center', va='center', fontsize=14)
     f.text(0, 0.5, "Predicted energy (GeV)", ha='center', va='center', rotation='vertical', fontsize=14)
 
-    plt.show()
+    #plt.show()
+
+
+def plotLosses(loss_gamma, loss_ele, loss_pi0, loss_chPi):
+    '''
+    Plots 4 plots of loss/epoch during training, one for each type of particle.
+    :param loss_gamma: path to HDF5 file.
+    :param loss_ele:
+    :param loss_pi0:
+    :param loss_chPi:
+    :return:
+    '''
+    gammaLoss = losses_from_HDF5(loss_gamma)
+
+    eleLoss = losses_from_HDF5(loss_ele)
+
+    pi0Loss = losses_from_HDF5(loss_pi0)
+
+    chPiLoss = losses_from_HDF5(loss_chPi)
+
+    gamma_loss = gammaLoss[0]
+
+    gamma_vaLoss = gammaLoss[1]
+
+    ele_loss = eleLoss[0]
+
+    ele_vaLoss = eleLoss[1]
+
+    pi0_loss = pi0Loss[0]
+
+    pi0_vaLoss = pi0Loss[1]
+
+    chPi_loss = chPiLoss[0]
+
+    chPi_vaLoss = chPiLoss[1]
+
+    # 4 subplots sharing both x/y axes
+    f, axes2d = plt.subplots(nrows=2, ncols=2, sharex=True, sharey=True, figsize=(5, 5))
+    # f.suptitle('Predicted energy X True energy', fontsize=14)
+
+    ax1 = axes2d[0, 0]
+    ax2 = axes2d[0, 1]
+    ax3 = axes2d[1, 0]
+    ax4 = axes2d[1, 1]
+
+    ax1.hist2d(tr_gamma, pred_gamma, bins=200, norm=LogNorm(), cmap="cool")
+    ax1.set_title('Photons')
+    ax2.hist2d(tr_ele, pred_ele, bins=200, norm=LogNorm(), cmap="cool")
+    ax2.set_title('Electrons')
+    ax3.hist2d(tr_pi0, pred_pi0, bins=200, norm=LogNorm(), cmap="cool")
+    ax3.set_title('Neutral pions')
+    ax4.hist2d(tr_chPi, pred_chPi, bins=200, norm=LogNorm(), cmap="cool")
+    ax4.set_title('Charged pions')
+
+    plt.xticks(np.arange(0, 600, 100.0))
+    plt.yticks(np.arange(0, 600, 100.0))
+    # tick.label.set_fontsize(14)
+
+    # axes2d.set_xlabel("True energy (GeV)", fontsize=14)
+    # axes2d.set_ylabel("Predicted energy (GeV)", fontsize=14)
+    f.text(0.5, 0, "True energy (GeV)", ha='center', va='center', fontsize=14)
+    f.text(0, 0.5, "Predicted energy (GeV)", ha='center', va='center', rotation='vertical', fontsize=14)
+
 
 
 def stats_particle(difference):
@@ -1110,26 +1185,27 @@ def out_hists(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0, tr_chPi,
     mean_chPi, std_chPi, error_chPi, label_chPi = stats_particle(difference_chPi)
 
     # plotting histograms
-    plt.hist(difference_gamma, nbins, normed=1, edgecolor='green', linewidth=1.5, facecolor='white', alpha=0.3,
-             label="Photons\n" + label_gamma)
-    plt.hist(difference_ele, nbins, normed=1, edgecolor='red', linewidth=1.5, facecolor='white', alpha=0.3,
-             label="Electrons\n" + label_ele)
-    plt.hist(difference_pi0, nbins, normed=1, edgecolor='blue', linewidth=1.5, facecolor='white', alpha=0.3,
-             label="Neutral Pions\n" + label_pi0)
-    plt.hist(difference_chPi, nbins, normed=1, edgecolor='orange', linewidth=1.5, facecolor='white', alpha=0.3,
-             label="Charged Pions\n" + label_chPi)
+    plt.hist(difference_gamma, histtype="step", bins=nbins, normed=1, edgecolor='green', linewidth=1.5,
+             facecolor='white', alpha=0.5, label="Photons\n" + label_gamma)
+    plt.hist(difference_ele, histtype="step", bins=nbins, normed=1, edgecolor='red', linewidth=1.5, facecolor='white',
+             alpha=0.5, label="Electrons\n" + label_ele)
+    plt.hist(difference_pi0, histtype="step", bins=nbins, normed=1, edgecolor='blue', linewidth=1.5, facecolor='white',
+             alpha=0.5, label="Neutral Pions\n" + label_pi0)
+    plt.hist(difference_chPi, histtype="step", bins=nbins, normed=1, edgecolor='orange', linewidth=1.5,
+             facecolor='white', alpha=0.5, label="Charged Pions\n" + label_chPi)
 
     plt.xlim(-20, 20)
     plt.legend()
-    plt.xlabel(r'$\frac{(E_{true} - E_{pred})}{E_{true}}$ (%)', size=16)
-    plt.ylabel("Probability", size=14)
+    plt.xlabel(r'$\frac{(E_{true} - E_{pred})}{E_{true}}$ (%)', size=18)
+    plt.ylabel("Probability", size=16)
 
     plt.show()
 
 
 #########################
-#EVERYTHING FROM HERE HASN'T BEEN TESTED
-#Has bugs
+# STOP!
+# Everything starting here has not been tested.
+# Contains bugs, do not use.
 #########################
 
 def multiMeans(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0, nbins=10):
