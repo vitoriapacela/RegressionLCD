@@ -84,27 +84,27 @@ def genHsum(generator):
         yield [ecal, hcal, s_hcal], true
 
 
-def _genSum(generator):
-    '''
-    -- This function might be buggy, haven't tested yet. --
-    Generator that receives a generator (Danny's) and outputs ECAL, HCAL and an array containing the sum over the ECAL and HCAL cells.
-    :param generator: gen_from_data(train_dir, batch_size=500, data_keys=[["ECAL", "HCAL"], "target"], prep_func=reshapeData)
-    :type generator: generator
-    :return: ECAL, HCAL, sum[ECAL, HCAL]
-    :rtype: numpy array with shape (n, 25, 25, 25), array with shape (n, 5, 5, 60), array with shape (n, 2); n is the batch size.
-    '''
-    # s = lambda x: np.sum(np.sum(np.sum(x,axis=-1),axis=-1),axis=-1)
-    s = lambda x: np.sum(np.sum(np.sum(x, axis=-1), axis=-1), axis=-1, keepdims=True)
-
-    while True:
-        (ecal, hcal), true = next(generator)
-        s_ecal = s(ecal)
-        s_hcal = s(hcal)
-        sums = np.array([s_ecal, s_hcal])
-        reshaped = sums.reshape(500,2)
-        # print(reshaped.shape)
-        # print(reshaped)
-        yield [ecal, hcal, sums], true
+# def _genSum(generator):
+#     '''
+#     -- This function might be buggy, haven't tested yet. --
+#     Generator that receives a generator (Danny's) and outputs ECAL, HCAL and an array containing the sum over the ECAL and HCAL cells.
+#     :param generator: gen_from_data(train_dir, batch_size=500, data_keys=[["ECAL", "HCAL"], "target"], prep_func=reshapeData)
+#     :type generator: generator
+#     :return: ECAL, HCAL, sum[ECAL, HCAL]
+#     :rtype: numpy array with shape (n, 25, 25, 25), array with shape (n, 5, 5, 60), array with shape (n, 2); n is the batch size.
+#     '''
+#     # s = lambda x: np.sum(np.sum(np.sum(x,axis=-1),axis=-1),axis=-1)
+#     s = lambda x: np.sum(np.sum(np.sum(x, axis=-1), axis=-1), axis=-1, keepdims=True)
+#
+#     while True:
+#         (ecal, hcal), true = next(generator)
+#         s_ecal = s(ecal)
+#         s_hcal = s(hcal)
+#         sums = np.array([s_ecal, s_hcal])
+#         reshaped = sums.reshape(500,2)
+#         # print(reshaped.shape)
+#         # print(reshaped)
+#         yield [ecal, hcal, sums], true
 
 
 def sumCal(cal):

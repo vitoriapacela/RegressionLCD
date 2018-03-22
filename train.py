@@ -11,7 +11,6 @@ if __package__ is None:
     sys.path.append(os.path.realpath("/data/shared/Software/CMS_Deep_Learning"))
     
 from CMS_Deep_Learning.io import gen_from_data, retrieve_data
-from CMS_Deep_Learning.postprocessing.metrics import distribute_to_bins
 
 if __package__ is None:
     sys.path.append(os.path.realpath("/data/shared/Software/RegressionLCD"))
@@ -30,6 +29,7 @@ train_dir = "/bigdata/shared/LCD2018/ChPiEscan/train/"
 valid_dir = "/bigdata/shared/LCD2018/ChPiEscan/val/"
 #test_dir = "/bigdata/shared/LCD2018/ChPiEscan/test/"
 
+
 # generator
 # training set:
 train = gen_from_data(train_dir, batch_size=400, data_keys=[["ECAL", "HCAL"], "energy"])
@@ -41,12 +41,10 @@ val = gen_from_data(valid_dir, batch_size=400, data_keys=[["ECAL", "HCAL"], "ene
 test = gen_from_data(valid_dir, batch_size=400, data_keys=[["ECAL", "HCAL"], "energy"])
 
 hist = model.fit_generator(train, 
-                           #samples_per_epoch=tr_samples,
-                           samples_per_epoch=10,
+                           samples_per_epoch=tr_samples,
                            nb_epoch=50,
                            validation_data = val, 
-                           #nb_val_samples=val_samples,
-                           nb_val_samples=5,
+                           nb_val_samples=val_samples,
                            verbose=1,
                            callbacks=[EarlyStopping(monitor='val_loss', patience=8, verbose=1, mode='min')
                            , ModelCheckpoint(filepath=('/nfshome/vitoriabp/gpu-4-culture-plate-sm/new_ds_notebooks/' + mName + '.h5'), 

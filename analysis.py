@@ -80,7 +80,7 @@ def show_losses(histories):
     #plt.savefig("loss.jpg")
 
 
-def dif(target, predicted):
+def _dif(target, predicted):
     '''
     Returns the difference between the target energy and the predicted energy.
     :parameter target: energy target (true value label) array.
@@ -95,7 +95,7 @@ def dif(target, predicted):
     return dif
 
 
-def rDif(target, predicted):
+def _rDif_pctg(target, predicted):
     '''
     Returns the relative difference to the target energy of the particle, in %.
     :parameter target: energy target (true value label) array.
@@ -193,7 +193,7 @@ def histEDif(target, pred, nbins=1500, lim=25, lim_l=0, lim_r=550, particle=""):
     :parameter particle: name of the particle in the dataset, for the title.
     :type particle: str
     '''
-    difference = dif(target, pred)
+    difference = _dif(target, pred)
 
     # the histogram of the data
 
@@ -242,7 +242,7 @@ def resolution(true, pred, particle=""):
     plt.rcParams['agg.path.chunksize'] = 10000
     from scipy.optimize import curve_fit
 
-    res = np.std(dif(true, pred)) / true
+    res = np.std(_dif(true, pred)) / true
 
     # energy resolution of the calorimeter
     def func(res, a, b, c):
@@ -291,7 +291,7 @@ def histRelDif(target, pred, nbins=550, lim=20, lim_l=0, lim_r=550, particle="")
     :parameter particle: name of the particle in the dataset, for the title.
     :type particle: str
     '''
-    difference = rDif(target, pred)
+    difference = _rDif_pctg(target, pred)
 
     # the histogram of the data
 
@@ -333,7 +333,7 @@ def RelTarget(target, pred, particle="", nbins=200):
     plt.ylabel(r'$\frac{(E_{true} - E_{pred})}{E_{true}}$ (%)', size=18)
     plt.title("%s \n Relative energy difference X True energy" % particle)
 
-    rDifference = rDif(target, pred)
+    rDifference = _rDif_pctg(target, pred)
 
     plt.hist2d(target, rDifference, bins=nbins, norm=LogNorm(), cmap="cool")
 
@@ -401,7 +401,7 @@ def plotMeanXEnergy(target, predicted, lim_y=0.14, lim_l=0, lim_r=520, limit=Fal
     plt.title("Mean. \n Energies between %d and %d GeV." % (lim_l, lim_r))
     #plt.title("Mean")
 
-    plt.scatter(target, np.mean(dif(target, predicted)) / predicted, color='g', alpha=0.5)
+    plt.scatter(target, np.mean(_dif(target, predicted)) / predicted, color='g', alpha=0.5)
 
     if (limit):
         plt.xlim(lim_l, lim_r)
@@ -440,7 +440,7 @@ def plotStdXEnergy(target, predicted, lim_y=2.7, lim_l=0, lim_r=520, limit=False
     plt.title("Standard deviation \n Energies between %d and %d GeV" % (lim_l, lim_r))
     #plt.title("Standard deviation")
 
-    plt.scatter(target, np.std(dif(target, predicted)) / predicted, color='g', alpha=0.5)
+    plt.scatter(target, np.std(_dif(target, predicted)) / predicted, color='g', alpha=0.5)
 
     if limit:
         plt.xlim(lim_l, lim_r)
@@ -493,8 +493,8 @@ def binning(nbins, label, pred, plot=False):
             # histEDif(x[i], y[i], nbins=200, lim=20, lim_l=i*iSize, lim_r=(i+1)*iSize)
             histRelDif(x[i], y[i], nbins=150, lim=15, lim_l=i*iSize, lim_r=(i+1)*iSize)
 
-        difference = dif(x[i], y[i])
-        relDiff = rDif(x[i], y[i])
+        difference = _dif(x[i], y[i])
+        relDiff = _rDif_pctg(x[i], y[i])
 
         mean = np.mean(difference)
         means.append(mean)
@@ -1110,10 +1110,10 @@ def hists(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0, tr_chPi, pre
     #f.suptitle('Relative energy difference', fontsize=16)
 
     # relative differences for different particles
-    difference_gamma = rDif(tr_gamma, pred_gamma)
-    difference_ele = rDif(tr_ele, pred_ele)
-    difference_pi0 = rDif(tr_pi0, pred_pi0)
-    difference_chPi = rDif(tr_chPi, pred_chPi)
+    difference_gamma = _rDif_pctg(tr_gamma, pred_gamma)
+    difference_ele = _rDif_pctg(tr_ele, pred_ele)
+    difference_pi0 = _rDif_pctg(tr_pi0, pred_pi0)
+    difference_chPi = _rDif_pctg(tr_chPi, pred_chPi)
 
     # relevant stats
     mean_gamma, std_gamma, error_gamma, label_gamma = stats_particle(difference_gamma)
@@ -1173,10 +1173,10 @@ def out_hists(tr_gamma, pred_gamma, tr_ele, pred_ele, tr_pi0, pred_pi0, tr_chPi,
     """
 
     # relative differences for different particles
-    difference_gamma = rDif(tr_gamma, pred_gamma)
-    difference_ele = rDif(tr_ele, pred_ele)
-    difference_pi0 = rDif(tr_pi0, pred_pi0)
-    difference_chPi = rDif(tr_chPi, pred_chPi)
+    difference_gamma = _rDif_pctg(tr_gamma, pred_gamma)
+    difference_ele = _rDif_pctg(tr_ele, pred_ele)
+    difference_pi0 = _rDif_pctg(tr_pi0, pred_pi0)
+    difference_chPi = _rDif_pctg(tr_chPi, pred_chPi)
 
     # relevant stats
     mean_gamma, std_gamma, error_gamma, label_gamma = stats_particle(difference_gamma)
@@ -1618,5 +1618,56 @@ def simple_rel_stds(rStds_gamma, rStds_ele, rStds_pi0):
     plt.show()
     # plt.savefig("stds_particles.jpg")
 
+
+def ultimate_plot(rStds_gamma, rStds_ele, rStds_pi0, rStds_chPi, res_gamma, res_ele,
+                  res_pi0, res_chPi, str_title="", verbose=False):
+    # from scipy.optimize import curve_fit
+    plt.figure(figsize=(6, 6))
+
+    ## plot the points ##
+    energies_gamma = aux_stds(rStds_gamma, label="CNN: Photons", marker='o', col='green')
+    energies_ele = aux_stds(rStds_ele, label="CNN: Electrons", marker='*', col='red')
+    energies_pi0 = aux_stds(rStds_pi0, label="CNN: Neutral Pions", marker='s', col='blue')
+    energies_chPi = aux_stds(rStds_chPi, label="CNN: Charged Pions", marker='^', col='orange')
+    ## - ##
+
+    ## fits ##
+    plt.rcParams['agg.path.chunksize'] = 10000
+
+    sig_rStds_gamma = rStds_gamma / np.sqrt(2 * np.asarray(sizes_gamma))
+    gamma_popt = fit_part(func, energies_gamma, rStds_gamma, sigmas=sig_rStds_gamma)
+    print gamma_popt
+    sig_rStds_ele = rStds_ele / np.sqrt(2 * np.asarray(sizes_ele))
+    ele_popt = fit_part(func, energies_ele, rStds_ele, sigmas=sig_rStds_ele)
+    print ele_popt
+    sig_rStds_pi0 = rStds_pi0 / np.sqrt(2 * np.asarray(sizes_pi0))
+    pi0_popt = fit_part(func, energies_pi0, rStds_pi0, sigmas=sig_rStds_pi0)
+    print pi0_popt
+    sig_rStds_chPi = rStds_chPi / np.sqrt(2 * np.asarray(sizes_chPi))
+    chPi_popt = fit_part(func, energies_chPi, rStds_chPi, sigmas=sig_rStds_chPi)
+    print chPi_popt
+
+    y_gamma = func(energies_gamma, *gamma_popt)
+    y_ele = func(energies_ele, *ele_popt)
+    y_pi0 = func(energies_pi0, *pi0_popt)
+    y_chPi = func(energies_chPi, *chPi_popt)
+
+    plt.plot(energies_gamma, y_gamma, color='green', ls="-")
+    plt.plot(energies_ele, y_ele, color='red', ls="-")
+    plt.plot(energies_pi0, y_pi0, color='blue', ls="-")
+    plt.plot(energies_chPi, y_chPi, color='orange', ls="-")
+    ## -- ##
+
+    plt.yscale('log')
+    plt.xlabel("True Energy (GeV)", size=18)
+    plt.ylabel(r"$\frac{\sigma({\Delta E})}{E_{true}}$", size=21)
+    plt.title("Energy resolution", size=18)
+    plt.xlim(0, 500)
+    # plt.ylim(0.5, 2000)
+    plt.legend(
+        bbox_to_anchor=(1, 1.1), prop={'size': 18}
+    )
+    plt.show()
+    # plt.savefig("ultimate.png", dpi=1000,bbox_inches='tight')
 
 
