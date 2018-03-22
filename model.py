@@ -70,7 +70,32 @@ def saveLosses(hist, name="regression"):
     f.close()
 
 
-def defModel(loss='mse', name="regression"):
+def dnnModel(modName='dnn'):
+    # ECAL input
+    input1 = Input(shape=(51, 51, 25))
+    model1 = Flatten()(input1)
+
+    # HCAL input
+    input2 = Input(shape=(11, 11, 60))
+    model2 = Flatten()(input2)
+
+    # Merging inputs
+    bmodel = merge([model1, model2], mode='concat')
+
+    bmodel = (Dense(1280, activation='relu'))(bmodel)
+
+    bmodel = (Dropout(0.5))(bmodel)
+
+    oe = Dense(1, activation='linear')(bmodel)  # output energy regression
+
+    # energy regression model
+    model = Model(input=[input1, input2], output=oe)
+    model.compile(loss='mse', optimizer='adam')
+    model.summary()
+    saveModel(model, name= modName)
+    return model
+
+def cnnModel(loss='mse', name="regression"):
     '''
     Regression model that has ECAL and HCAL as inputs.
     :parameter loss: Keras' loss function to be used. Recommended: mse, mean_absolute_error,
@@ -104,11 +129,6 @@ def defModel(loss='mse', name="regression"):
 
     # oc = Dense(1,activation='sigmoid', name='particle_label')(bmodel) # output particle classification
     oe = Dense(1, activation='linear', name='energy')(bmodel)  # output energy regression
-
-    # classification, will not use yet
-    # bimodel = Model(input=[input1,input2], output=[oc,oe])
-    # bimodel.compile(loss=['binary_crossentropy', 'mse'], optimizer='sgd')
-    # bimodel.summary()
 
     # energy regression model
     model = Model(input=[input1, input2], output=oe)
