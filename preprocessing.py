@@ -23,30 +23,30 @@ def reshapeData(inp):
     return (xe, xh), energy
 
 
-def nSum(directory):
-    '''
-    Does not work. Check out new function.
-    Naive sum of the shower deposits in the ECAL and HCAL.
-    :param directory: path to the directory with HDF5 files.
-    :return: sum of the energies in the ECAL and HCAL, respectively.
-    '''
-
-
-    s_ecal = 0
-    s_hcal = 0
-
-    if (os.path.exists(os.path.abspath(directory)) and os.path.isdir(directory)):
-        directory = glob.glob(os.path.abspath(directory) + "/*.h5")
-
-    for fileName in directory:
-        inp = h5py.File(fileName, "r")
-        ecal = np.array(inp["ECAL"], dtype="float32")
-        hcal = np.array(inp["HCAL"], dtype="float32")
-
-        s_ecal += np.sum(np.sum(np.sum(ecal, axis=-1), axis=-1), axis=-1, keepdims=True)
-        s_hcal += np.sum(np.sum(np.sum(hcal, axis=-1), axis=-1), axis=-1, keepdims=True)
-
-    return s_ecal, s_hcal
+# def nSum(directory):
+#     '''
+#     Does not work. Check out new function.
+#     Naive sum of the shower deposits in the ECAL and HCAL.
+#     :param directory: path to the directory with HDF5 files.
+#     :return: sum of the energies in the ECAL and HCAL, respectively.
+#     '''
+#
+#
+#     s_ecal = 0
+#     s_hcal = 0
+#
+#     if (os.path.exists(os.path.abspath(directory)) and os.path.isdir(directory)):
+#         directory = glob.glob(os.path.abspath(directory) + "/*.h5")
+#
+#     for fileName in directory:
+#         inp = h5py.File(fileName, "r")
+#         ecal = np.array(inp["ECAL"], dtype="float32")
+#         hcal = np.array(inp["HCAL"], dtype="float32")
+#
+#         s_ecal += np.sum(np.sum(np.sum(ecal, axis=-1), axis=-1), axis=-1, keepdims=True)
+#         s_hcal += np.sum(np.sum(np.sum(hcal, axis=-1), axis=-1), axis=-1, keepdims=True)
+#
+#     return s_ecal, s_hcal
 
 
 def nSamples(directory):
@@ -75,7 +75,7 @@ def genHsum(generator):
     Generator that receives a generator (Danny's) and outputs ECAL, HCAL and the sum over the HCAL cells.
     :param generator: gen_from_data(train_dir, batch_size=500, data_keys=[["ECAL", "HCAL"], "target"], prep_func=reshapeData)
     :type generator: generator
-    :return: ECAL, HCAL, HCALsum
+    :return: ECAL, HCAL, sum
     :rtype: numpy array with shape (n, 25, 25, 25), array with shape (n, 5, 5, 60), array with shape (n, 1); n is the batch size.
     '''
     while True:
@@ -143,10 +143,11 @@ def inpSum(dir):
     return inSum
 
 
-def preSum(train_dir, particle=""):
+def preSum(train_dir, particle="", reshape=False, label='energy'):
     '''
     To be used before training for data visualization.
     Naive sum of the shower deposits in the ECAL and HCAL.
+    Use label='target' in the old dataset.
     :type train_dir: str.
     :parameter train_dir: path to the training directory with HDF5 files.
     :type particle: str.
@@ -155,11 +156,12 @@ def preSum(train_dir, particle=""):
     :rtype: numpy.ndarray, numpy.ndarray; shape: (n,) shape: (n,)
     '''
     # grab targets (y)
-    all_y = simple_grab('Y', data=train_dir, label_keys='target',
+    all_y = simple_grab('Y', data=train_dir, label_keys=label,
                         input_keys=['ECAL', 'HCAL'])
-    all_y = all_y[:, 1:]
-    all_y = all_y.ravel()
-    #print(all_y.shape)
+    if(reshape == True):
+        all_y = all_y[:, 1:]
+        all_y = all_y.ravel()
+        #print(all_y.shape)
 
     # sum of ECAL and HCAL
     inSum = inpSum(train_dir)
