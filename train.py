@@ -29,6 +29,9 @@ train_dir = "/bigdata/shared/LCD2018/ChPiEscan/train/"
 valid_dir = "/bigdata/shared/LCD2018/ChPiEscan/val/"
 #test_dir = "/bigdata/shared/LCD2018/ChPiEscan/test/"
 
+# total number of samples
+tr_samples = nSamples(train_dir)
+val_samples = nSamples(valid_dir)
 
 # generator
 # training set:
