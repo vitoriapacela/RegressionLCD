@@ -5,8 +5,8 @@ install:
     - pip install 'numpy'
     - pip install 'keras'
     - pip install 'tensorflow'
-    - pip install 'pytest-pep8'
+    - pip install 'tox'
     - pip install 'matplotlib'
     - pip install 'h5py'
 script:
-    - py.test --pep8
+    - tox
