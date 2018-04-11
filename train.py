@@ -43,20 +43,7 @@ val = gen_from_data(valid_dir, batch_size=400, data_keys=[["ECAL", "HCAL"], "ene
 # testing set:
 test = gen_from_data(valid_dir, batch_size=400, data_keys=[["ECAL", "HCAL"], "energy"])
 
-hist = model.fit_generator(train, 
-                           samples_per_epoch=tr_samples,
-                           nb_epoch=50,
-                           validation_data = val, 
-                           nb_val_samples=val_samples,
-                           verbose=1,
-                           callbacks=[EarlyStopping(monitor='val_loss', patience=8, verbose=1, mode='min')
-                           , ModelCheckpoint(filepath=('/nfshome/vitoriabp/gpu-4-culture-plate-sm/new_ds_notebooks/' + mName + '.h5'), 
-                                             monitor='val_loss', 
-                                             verbose=0, 
-                                             save_best_only=True
-                                             , mode='min'
-                                            )]
-                            )
+hist = model.fit_generator(train, samples_per_epoch=tr_samples, nb_epoch=50, validation_data = val, nb_val_samples=val_samples, verbose=1, callbacks=[EarlyStopping(monitor='val_loss', patience=8, verbose=1, mode='min'), ModelCheckpoint(filepath=('/nfshome/vitoriabp/gpu-4-culture-plate-sm/new_ds_notebooks/' + mName + '.h5'), monitor='val_loss', verbose=0, save_best_only=True, mode='min')])
 
 saveLosses(hist, name="mName")
 
