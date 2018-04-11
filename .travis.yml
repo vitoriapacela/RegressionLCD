@@ -1,0 +1,12 @@
+language: python
+python:
+	- '2.7'
+install:
+	- pip install 'numpy'
+	- pip install 'keras'
+	- pip install 'tensorflow'
+	- pip install 'pytest-pep8'
+	- pip install 'matplotlib'
+	- pip install 'h5py'
+script:
+	- py.test --pep8
