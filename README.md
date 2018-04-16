@@ -8,13 +8,13 @@ This work was published in the Deep Learning in Particle Physics ([DLPS](https:/
 B. Hooberman, V. Barin Pacela, M. Zhang, W. Wei, G. Khattak, S. Vallecorsa, A. Farbin, J-R. Vlimant, F. Carminati, M. Spiropulu, M. Pierini. [**Calorimetry with Deep Learning: Particle Classification, Energy Regression, and Simulation for High-Energy Physics**](https://dl4physicalsciences.github.io/files/nips_dlps_2017_15.pdf). DLPS 2017, NIPS 2017, Long Beach, CA, USA.
 
 ### Usage
-This repository contains data pre-processing functions (`preprocessing.py`), model topologies (`model.py`) and post-processing functions (`analysis.py`) to analyze model performance.
+This repository contains data pre-processing functions (`src/preprocessing.py`), model topologies (`src/model.py`) and post-processing functions (`src/analysis.py`) to analyze model performance.
 
 You can find example notebooks in `examples`. Older notebooks (not updated) can be found in the [NotebooksLCD](https://github.com/vitoriapacela/NotebooksLCD) repository.
 
-To submit a training job to a gpu, modify `train.py` adapting it to your data.
+To submit a training job to a gpu, modify `src/train.py` adapting it to your data.
 
-To get predictions of the test set, use `test.py`. 
+To get predictions of the test set, use `src/test.py`. 
 
 ### Environment
 After cloning this repository and entering it, execute `pip install . --user`.

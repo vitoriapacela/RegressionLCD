@@ -668,6 +668,13 @@ def rMeans(rMeans, stds, sizes, particle ="", col='pink'):
     plt.show()
     # plt.savefig("rMeans.jpg")
 
+def ade(name, yes):
+    '''
+    hfuwi
+    :param name: hufiwe
+    :param yes: fewio
+    :return:
+    '''
 
 def stds(stds, particle ="", col='blue'):
     '''
