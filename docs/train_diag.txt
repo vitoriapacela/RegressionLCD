@@ -1,0 +1,2 @@
+(start)->(src)->(train)->|a|->(train_dir, valid_dir)->|b|->(preprocessing.nSamples[train_dir])->|c|, |b|->(preprocessing.nSamples[valid_dir])->|c|, |b|->(CMS_Deep_Larning.io.gen_from_data[train_dir])->|c|, |b|->(CMS_Deep_Learning.io.gen_from_data[valid_dir])->|c|, |a|->(model.dnnModel)->|c|->(keras.model.layers.Sequential.fit_generator)->(model.saveLosses)->(analysis.show_losses)->(end)
+

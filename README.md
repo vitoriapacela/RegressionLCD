@@ -14,7 +14,9 @@ You can find example notebooks in `examples`. Older notebooks (not updated) can 
 
 To submit a training job to a gpu, modify `src/train.py` adapting it to your data.
 
-To get predictions of the test set, use `src/test.py`. 
+To get predictions of the test set, use `src/test.py`.
+
+You can read the documentation in `docs/Documentation.md`. UML activity diagrams are in the same directory.
 
 ### Environment
 After cloning this repository and entering it, execute `pip install . --user`.
